@@ -2,26 +2,32 @@ import { createContext, useState, useContext, ReactNode, useEffect } from 'react
 
 interface AuthContextType {
     isLoggedIn: boolean;
-    user: { username: string, token: string } | null;
-    login: (username: string, token: string) => void;
+    user: { username: string, token: string, role: Role } | null;
+    login: (username: string, token: string, role: Role) => void;
+    role: Role | null;
     logout: () => void
 }
+
+export type Role = 'manager' | 'staff' | 'customer';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState<{ username: string, token: string } | null>(null);
+    const [role, setRole] = useState<Role | null>(null);
+    const [user, setUser] = useState<{ username: string, token: string, role: Role } | null>(null);
 
-    const login = (username: string, token: string) => {
+    const login = (username: string, token: string, role: Role) => {
         setIsLoggedIn(true);
-        setUser({ username, token });
-        localStorage.setItem("token", JSON.stringify({ username, token }));
+        setUser({ username, token, role });
+        setRole(role);
+        localStorage.setItem("token", JSON.stringify({ username, token, role }));
     };
 
     const logout = () => {
         setIsLoggedIn(false);
         setUser(null);
+        setRole(null)
         localStorage.removeItem("token");
     };
 
@@ -36,7 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, user, login, logout, role }}>
             {children}
         </AuthContext.Provider>
     );
