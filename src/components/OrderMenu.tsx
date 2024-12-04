@@ -13,13 +13,8 @@ interface MenuItem {
 const OrderMenu = () => {
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-    const [customerName, setCustomerName] = useState('');
-    const [contactInfo, setContactInfo] = useState('');
-    const [quantity, setQuantity] = useState(1);
     const [category, setCategory] = useState<string>("All");
     const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
-
-
 
     useEffect(() => {
         // fetch('http://localhost:8080/api/menu-items')
