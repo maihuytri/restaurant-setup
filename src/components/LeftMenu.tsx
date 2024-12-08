@@ -3,9 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 const LeftMenu = () => {
-    const { role } = useAuth();
-
-    if (!role) return null;
+    const { user } = useAuth();
+    if (!user?.role) return null;
 
     // Define menu items based on roles
     const menuItems: Record<string, { label: string; path: string }[]> = {
@@ -14,22 +13,23 @@ const LeftMenu = () => {
             { label: 'Add Staff', path: '/add-staff' },
             { label: 'View Orders', path: '/orders' },
             { label: 'Customer List', path: '/customers' },
+            { label: 'Add Table', path: '/tables' },
         ],
         staff: [
             { label: 'View Orders', path: '/orders' },
             { label: 'Customer List', path: '/customers' },
         ],
         customer: [
-            { label: 'View Orders', path: '/orders' },
-            { label: 'Customer List', path: '/customers' },
+            { label: 'View Orders', path: '/view-orders' },
+            { label: 'Orders', path: '/' },
+            { label: 'Order Table', path: '/reservations' },
         ],
     };
 
     return (
         <div className="w-64 bg-gray-100 h-screen p-4">
-            <h2 className="text-xl font-bold mb-4">{role.charAt(0).toUpperCase() + role.slice(1)} Menu</h2>
             <ul className="space-y-2">
-                {menuItems[role]?.map((item, index) => (
+                {menuItems[user.role]?.map((item, index) => (
                     <li key={index}>
                         <Link to={item.path} className="text-blue-500 hover:underline">
                             {item.label}

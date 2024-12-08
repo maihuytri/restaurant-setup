@@ -10,6 +10,8 @@ import LeftMenu from './components/LeftMenu';
 import AddMenu from './pages/AddMenu';
 import AddStaff from './pages/AddStaff';
 import OrderList from './components/OrderList';
+import Reservation from './pages/Reservation';
+import TableManagement from './pages/TableManagement';
 
 // const App = () => {
 //   return (
@@ -47,6 +49,8 @@ const App = () => {
               <Route path="/add-menu" element={<AddMenu />} />
               <Route path="/add-staff" element={<AddStaff />} />
               <Route path="/orders" element={<OrderList />} />
+              <Route path="/tables" element={<TableManagement />} />
+              <Route path="/reservations" element={<Reservation />} />
             </Routes>
           </div>
         </div>
