@@ -33,26 +33,7 @@ const Login = () => {
                 return;
             }
 
-            if (username == "admin@example.com") {
-                login(username, "admin", "manager");
-                navigate('/');
-                return
-            }
-
-
-            if (username == "customer@example.com") {
-                login(username, "customer", "customer");
-                navigate('/');
-                return
-            }
-
-            if (username == "staff@example.com") {
-                login(username, "customer", "staff");
-                navigate('/');
-                return
-            }
-
-            const res = await fetch(`${process.env.REACT_APP_APIURL}/login`,
+            const res = await fetch(`${process.env.REACT_APP_APIURL}/auth/login`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -60,8 +41,11 @@ const Login = () => {
                 });
 
             const result = await res.json();
+            console.log(result.data.token);
+            console.log(JSON.stringify(result));
             if (result.errorCode == 200) {
-                login(username, result.data.token, "customer");
+
+                login(username, result.data.token, result.data.role);
 
                 navigate('/');
             } else {
@@ -70,8 +54,9 @@ const Login = () => {
                 setIsShowMessageBoxModalOpen(true);
             }
         } catch (error) {
-            alert(error);
-            console.log("error " + error);
+            setTitle("Message");
+            setMessage("Internal server");
+            setIsShowMessageBoxModalOpen(true);
         }
 
     };

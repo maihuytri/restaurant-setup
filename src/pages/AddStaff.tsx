@@ -1,27 +1,67 @@
 import React, { useState } from 'react';
+import MessageBox from '../components/MessageBox';
+import { useAuth } from '../context/AuthContext';
 
 const AddStaff = () => {
+    const { user } = useAuth();
     const [name, setName] = useState('');
-    const [contactInfo, setContactInfo] = useState('');
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [isShowMessageBoxModalOpen, setIsShowMessageBoxModalOpen] = useState(false);
+    const [title, setTitle] = useState('');
+    const [message, setMessage] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const handleClose = () => {
+        setIsShowMessageBoxModalOpen(false);
+    }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        try {
 
-        fetch(`${process.env.REACT_APP_APIURL}/api/users`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, role: 'staff', contactInfo }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    alert('Staff added successfully!');
-                    setName('');
-                    setContactInfo('');
-                } else {
-                    alert('Failed to add staff.');
-                }
-            })
-            .catch((error) => console.error('Error adding staff:', error));
+            if (!name) {
+                setTitle("Message");
+                setMessage("Please enter your name")
+                setIsShowMessageBoxModalOpen(true);
+                return;
+            }
+
+            if (!username) {
+                setTitle("Message");
+                setMessage("Please enter your username")
+                setIsShowMessageBoxModalOpen(true);
+                return;
+            }
+
+            if (!password) {
+                setTitle("Message");
+                setMessage("Please enter your password")
+                setIsShowMessageBoxModalOpen(true);
+                return;
+            }
+
+            const res = await fetch(`${process.env.REACT_APP_APIURL}/users`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
+                    body: JSON.stringify({ name, role: 'staff', username, phone, email }),
+                });
+
+            const result = await res.json();
+            setTitle("Message");
+            setMessage(result.message)
+            setIsShowMessageBoxModalOpen(true);
+            if (result.errorCode == 200) {
+                setUsername('');
+                setPassword('');
+                setName('');
+            }
+        } catch (error) {
+            setTitle("Message");
+            setMessage("Internal server");
+            setIsShowMessageBoxModalOpen(true);
+        }
     };
 
     return (
@@ -38,9 +78,17 @@ const AddStaff = () => {
                 />
                 <input
                     type="text"
-                    placeholder="Contact Info"
-                    value={contactInfo}
-                    onChange={(e) => setContactInfo(e.target.value)}
+                    placeholder="Please enter your username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    className="block w-full border p-2 rounded"
+                />
+                <input
+                    type="password"
+                    placeholder="Please enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                     className="block w-full border p-2 rounded"
                 />
@@ -48,6 +96,11 @@ const AddStaff = () => {
                     Add Staff
                 </button>
             </form>
+            <div>
+                {isShowMessageBoxModalOpen && (
+                    <MessageBox onClose={handleClose} title={title} message={message} />
+                )}
+            </div>
         </div>
     );
 };
