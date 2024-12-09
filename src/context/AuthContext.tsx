@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
     isLoggedIn: boolean;
@@ -14,7 +15,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState<{ username: string, token: string, role: Role } | null>(null);
-
     const login = (username: string, token: string, role: Role) => {
         setIsLoggedIn(true);
         setUser({ username, token, role });
