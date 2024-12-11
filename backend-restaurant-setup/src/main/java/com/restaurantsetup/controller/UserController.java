@@ -35,12 +35,9 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<APIResponse> createUser(@RequestBody User user) {
-        System.out.println("createUser " + user.getUsername());
         APIResponse response = new APIResponse();
         try {
             if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-                System.out.println("Có");
-                // throw new IllegalArgumentException("Username already exists!");
                 response.setErrorCode(500);
                 response.setMessage("Username already exists!");
                 return ResponseEntity.ok(response);
