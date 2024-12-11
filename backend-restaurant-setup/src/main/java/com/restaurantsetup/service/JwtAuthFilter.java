@@ -29,16 +29,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        System.out.println("Role from token44: " + authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("Role from token:1 ");
             filterChain.doFilter(request, response);
             return;
         }
-
-        System.out.println("Role from token:2 ");
         final String token = authHeader.substring(7);
-        System.out.println(" Toke from " + token);
         try {
             @SuppressWarnings("deprecation")
             Claims claims = Jwts.parserBuilder()
