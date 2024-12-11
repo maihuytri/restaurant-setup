@@ -19,6 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.List;
 
+import static io.jsonwebtoken.Jwts.*;
+
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final String SECRET_KEY = "yourBase64EncodedSecretKeyHere123456";
