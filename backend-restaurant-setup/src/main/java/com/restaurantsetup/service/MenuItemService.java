@@ -16,7 +16,6 @@ public class MenuItemService {
     MenuItemRepository menuItemRepository;
 
 
-
     // getMenuItemById
     public MenuItemResponse getMenuItemById(Long id) {
         MenuItem menuItem = menuItemRepository.findById(id)
@@ -25,7 +24,7 @@ public class MenuItemService {
     }
 
     // getMenuItemByCategory
-    public List<MenuItemResponse> getMenuItemByCategory(String category) {
+    public List<MenuItemResponse> getMenuItemsByCategory(String category) {
         List<MenuItem> menuItems = menuItemRepository.findByCategory(category);
         return menuItems.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
@@ -37,6 +36,9 @@ public class MenuItemService {
     }
     //create a menuItem
     public MenuItemResponse createMenuItem(MenuItemRequest menuItemRequest) {
+        if (menuItemRequest.price() == null || menuItemRequest.price() <= 0) {
+            throw new IllegalArgumentException("Price must be provided and positive");
+        }
         MenuItem menuItem = new MenuItem();
         menuItem.setName(menuItemRequest.name());
         menuItem.setDescription(menuItemRequest.description());
@@ -62,7 +64,7 @@ public class MenuItemService {
     public void deleteMenuItem(Long id) {
         MenuItem existingMenuItem = menuItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + id));
-        menuItemRepository.deleteById(id);
+        menuItemRepository.delete(existingMenuItem);
     }
 
     // Conversion method to Response

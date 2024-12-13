@@ -6,7 +6,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -18,22 +21,23 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String orderDate;
-    private Integer quantity;
-    private double price;
+    @DateTimeFormat
+    private LocalDateTime orderDate = LocalDateTime.now();// change to localdate instead of string
+    private Integer menuItemCount;
+    private double totalPrice;
     private String note;
-
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;//
 
-    //@ManyToOne
-    //@JoinColumn(name = "customer_id")
-   // private Customer customer;
+//    @OneToMany(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "order_id", referencedColumnName = "id")
+//    private List<MenuItem> menuItems;
 
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private List<MenuItem> menuItems;
-
+    @OneToOne
+    @JoinColumn(name = "menuItem_id", referencedColumnName = "id")
+    private MenuItem menuItem;
 }

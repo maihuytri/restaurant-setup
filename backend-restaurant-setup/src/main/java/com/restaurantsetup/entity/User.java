@@ -1,86 +1,44 @@
 package com.restaurantsetup.entity;
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String customerName;
     private String username;
     private String password;
-
-    // Constructors
-    public User() {
-    }
-
-    public User(String name, Role role, Contact contact) {
-        this.name = name;
-        this.role = role;
-        this.contact = contact;
-    }
-
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String contactTel;
 
-    @Embedded
-    private Contact contact;
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 
-    // Getters and setters
-    public Long getId() {
-        return id;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private List<Reservation> reservations;
+
+    public User(String customerName, String contactTel) {
+        this.customerName = customerName;
+        this.contactTel = contactTel;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
+    // Constructors
+    public User(String customerName, Role role, String contactTel) {
+        this.customerName = customerName;
         this.role = role;
-    }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        this.contactTel = contactTel;
     }
 }
