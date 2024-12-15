@@ -1,5 +1,7 @@
 package com.restaurantsetup.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +38,19 @@ public class BookingTableController {
                 HttpStatus.OK);
     }
 
-    // @GetMapping("/{id}")
-    // public ResponseEntity<?> getBookingTableById(@PathVariable Long id) {
-    // BookingTableResponse bookingTableResponse =
-    // bookingTableService.getBookingTableById(id);
-    // return new ResponseEntity<BookingTableResponse>(bookingTableResponse,
-    // HttpStatus.OK);
-    // }
+    @GetMapping("/list")
+    public ResponseEntity<?> getAllBookingTables() {
+        List<BookingTableResponse> bookingTableResponse = bookingTableService.getAllBookingTables();
+        return new ResponseEntity<List<BookingTableResponse>>(bookingTableResponse,
+                HttpStatus.OK);
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<?> getBookingTableById(@PathVariable Long id) {
+        BookingTableResponse bookingTableResponse = bookingTableService.getBookingTableById(id);
+        return new ResponseEntity<BookingTableResponse>(bookingTableResponse,
+                HttpStatus.OK);
+    }
 
     @GetMapping("/{name}")
     public ResponseEntity<?> getBookingTableById(@PathVariable String name) {

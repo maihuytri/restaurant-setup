@@ -1,5 +1,7 @@
 package com.restaurantsetup.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,5 +81,19 @@ public class BookingTableService {
         } catch (Exception e) {
             throw new Error(e.getMessage());
         }
+    }
+
+    public List<BookingTableResponse> getAllBookingTables() {
+        try {
+            List<BookingTable> bookingTables = bookingTableRepository.findAll();
+            List<BookingTableResponse> bookingTableResponses = bookingTables.stream()
+                    .map(table -> new BookingTableResponse(table.getId(), table.getName(), table.getCapacity(),
+                            table.getStatus()))
+                    .toList();
+            return bookingTableResponses;
+        } catch (Exception e) {
+            throw new Error(e.getMessage());
+        }
+
     }
 }
