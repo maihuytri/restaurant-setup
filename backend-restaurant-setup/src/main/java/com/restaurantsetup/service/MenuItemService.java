@@ -54,6 +54,7 @@ public class MenuItemService {
                 .orElseThrow(() -> new RuntimeException("MenuItem not found with id: " + id));
         existingMenuItem.setName(menuItemRequest.name());
         existingMenuItem.setDescription(menuItemRequest.description());
+        System.out.println("tsai test price: " + menuItemRequest.price());
         existingMenuItem.setPrice(menuItemRequest.price());
         existingMenuItem.setCategory(menuItemRequest.category());
         MenuItem updatedMenuItem = menuItemRepository.save(existingMenuItem);

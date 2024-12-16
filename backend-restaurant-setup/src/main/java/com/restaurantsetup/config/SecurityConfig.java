@@ -22,10 +22,10 @@ public class SecurityConfig {
                         .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/menuItems/**").permitAll()
                         .requestMatchers("/orders/**").permitAll()
-                                //.anyRequest().permitAll()
+//                                .anyRequest().permitAll()
                         .anyRequest().authenticated()
                 )
                 .build();
-       
+
     }
 }

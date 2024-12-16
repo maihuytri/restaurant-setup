@@ -52,8 +52,9 @@ public class OrderService {
     public OrderResponse createOrder(OrderRequest orderRequest) {
         //get the menuItem
         MenuItemRequest menuItemRequest = orderRequest.menuItemRequest();
-        MenuItem menuItem = menuItemRepository.findMenuItemByName(menuItemRequest.name());
-
+        MenuItem menuItem = menuItemRepository.findById(menuItemRequest.id()).orElseThrow(
+                () -> new IllegalArgumentException("Menuitem not found")
+        );
         User user = userRepository.findByContactTel(orderRequest.contactTel())
                 .orElseGet(() -> {
                     User newUser = new User();
@@ -75,34 +76,26 @@ public class OrderService {
     }
 
     //update order
-    public OrderResponse editOrder(Long orderId, OrderRequest orderRequest) {
+    public OrderResponse editOrder(Long orderId, OrderRequest updatedOrderRequest) {
         Order existingOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with Id: " + orderId));
+        MenuItemRequest updatedMenuItemRequest = updatedOrderRequest.menuItemRequest();
+        MenuItem updateMenuItem = menuItemRepository.findById(updatedMenuItemRequest.id()).orElseThrow(() ->
+                new IllegalArgumentException("Menuitem not found"));
+        System.out.println("tsai test : " + updateMenuItem.getName());
+        existingOrder.setMenuItem(updateMenuItem);
+        existingOrder.setMenuItemCount(updatedOrderRequest.menuItemCount());
+        existingOrder.setNote(updatedOrderRequest.note());
+        existingOrder.setTotalPrice(updatedOrderRequest.menuItemCount() * updateMenuItem.getPrice());
 
-        MenuItemRequest menuItemRequest = orderRequest.menuItemRequest();
-        if (menuItemRequest != null) {
-            MenuItem menuItem = existingOrder.getMenuItem();
-            menuItem.setName(menuItemRequest.name());
-            menuItem.setDescription(menuItemRequest.description());
-            menuItem.setPrice(menuItemRequest.price());
-            menuItem.setCategory(menuItemRequest.category());
-            menuItemRepository.save(menuItem);
-        }
-        User user = existingOrder.getUser();
-        if (orderRequest.customerName() != null && !orderRequest.customerName().isBlank()) {
-            user.setCustomerName(orderRequest.customerName());
-        }
-        if (orderRequest.contactTel() != null && !orderRequest.contactTel().isBlank()) {
-            user.setContactTel(orderRequest.contactTel());
-        }
-        userRepository.save(user);
-
-        if (orderRequest.menuItemCount() != null && orderRequest.menuItemCount() > 0) {
-            existingOrder.setMenuItemCount(orderRequest.menuItemCount());
-            existingOrder.setTotalPrice(orderRequest.menuItemCount() * existingOrder.getMenuItem().getPrice());
-        }
-        existingOrder.setNote(orderRequest.note());
-        existingOrder.setStatus(OrderStatus.PENDING);
+        User updateUser = userRepository.findByContactTel(updatedOrderRequest.contactTel())
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setCustomerName(updatedOrderRequest.customerName());
+                    newUser.setContactTel(updatedOrderRequest.contactTel());
+                    return userRepository.save(newUser);
+                });
+        existingOrder.setUser(updateUser);
         Order updatedOrder = orderRepository.save(existingOrder);
         return convertToOrderResponse(updatedOrder);
     }
@@ -114,7 +107,6 @@ public class OrderService {
         orderRepository.deleteById(orderId);
 
     }
-
 
     private OrderResponse convertToOrderResponse(Order order) {
         MenuItem menuItem = order.getMenuItem();
@@ -136,6 +128,4 @@ public class OrderService {
                 order.getTotalPrice()
         );
     }
-
-
 }

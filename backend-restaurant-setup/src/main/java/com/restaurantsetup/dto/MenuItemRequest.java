@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Positive;
 
 
 public record MenuItemRequest(
+        Long id,
         @NotBlank(message = "Name cannot be blank")
         String name,
         String description,
