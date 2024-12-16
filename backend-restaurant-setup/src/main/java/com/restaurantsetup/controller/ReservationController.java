@@ -20,11 +20,11 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-    @PostMapping("/create/{bookingTableId}")
+    @PostMapping("/create/{bookingTableId}/{userId}")
     public ReservationResponse createReservation(@RequestBody ReservationRequest reservationRequest,
-            @PathVariable Long bookingTableId) {
+            @PathVariable Long bookingTableId, @PathVariable Long userId) {
         ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest,
-                bookingTableId);
+                bookingTableId, userId);
         return reservationResponse;
     }
 
@@ -38,6 +38,12 @@ public class ReservationController {
     @GetMapping("/list")
     public List<ReservationResponse> getAllReservations() {
         List<ReservationResponse> reservationResponses = reservationService.getAllReservations();
+        return reservationResponses;
+    }
+
+    @GetMapping("/list/{userId}")
+    public List<ReservationResponse> getAllReservationsByUserId(@PathVariable Long userId) {
+        List<ReservationResponse> reservationResponses = reservationService.getAllReservationsByUserId(userId);
         return reservationResponses;
     }
 }

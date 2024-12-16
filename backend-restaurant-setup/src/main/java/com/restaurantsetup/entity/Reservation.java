@@ -28,4 +28,8 @@ public class Reservation {
     @JoinColumn(name = "booking_table_id", referencedColumnName = "id", nullable = false)
     private BookingTable bookingTable;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
+
 }
