@@ -64,7 +64,8 @@ public class ReservationService {
                                 savedReservation.getBookingTable().getName(),
                                 savedReservation.getBookingTable().getCapacity(),
                                 savedReservation.getBookingTable().getStatus()),
-                        new UserResponse(savedReservation.getUser().getId(), savedReservation.getUser().getName(),
+                        new UserResponse(savedReservation.getUser().getId(),
+                                savedReservation.getUser().getCustomerName(),
                                 savedReservation.getUser().getUsername()));
 
                 return reservationResponse;
@@ -100,7 +101,7 @@ public class ReservationService {
                     new BookingTableResponse(reservation.getBookingTable().getId(),
                             reservation.getBookingTable().getName(), reservation.getBookingTable().getCapacity(),
                             reservation.getBookingTable().getStatus()),
-                    new UserResponse(reservation.getUser().getId(), reservation.getUser().getName(),
+                    new UserResponse(reservation.getUser().getId(), reservation.getUser().getCustomerName(),
                             reservation.getUser().getUsername()));
             return reservationResponse;
         } catch (Exception e) {
@@ -115,7 +116,7 @@ public class ReservationService {
                             res.getTime(),
                             new BookingTableResponse(res.getBookingTable().getId(), res.getBookingTable().getName(),
                                     res.getBookingTable().getCapacity(), res.getBookingTable().getStatus()),
-                            new UserResponse(res.getUser().getId(), res.getUser().getName(),
+                            new UserResponse(res.getUser().getId(), res.getUser().getCustomerName(),
                                     res.getUser()
                                             .getUsername())))
                     .toList();
@@ -135,7 +136,7 @@ public class ReservationService {
                             res.getTime(),
                             new BookingTableResponse(res.getBookingTable().getId(), res.getBookingTable().getName(),
                                     res.getBookingTable().getCapacity(), res.getBookingTable().getStatus()),
-                            new UserResponse(res.getUser().getId(), res.getUser().getName(),
+                            new UserResponse(res.getUser().getId(), res.getUser().getCustomerName(),
                                     res.getUser()
                                             .getUsername())))
                     .toList();

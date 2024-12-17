@@ -13,13 +13,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
-
 
 @Entity
 @AllArgsConstructor
@@ -38,10 +38,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id")
-    //@JsonIgnore
+    // @JsonIgnore
     private User user;//
 
     @ManyToOne // Allow multiple orders to reference the same MenuItem
@@ -107,7 +106,6 @@ public class Order {
     // @ManyToOne
     // @JoinColumn(name = "customer_id")
     // private Customer customer;
-
 
     public MenuItem getMenuItem() {
         return menuItem;

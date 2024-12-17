@@ -11,25 +11,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-       return http.
-               cors().and().
-                csrf().disable()
-                .authorizeHttpRequests(
-                        auth -> auth
-                        .requestMatchers("/auth/login", "/auth/signup").permitAll()
-                        .requestMatchers("/users/**").permitAll()
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                return http.cors().and().csrf().disable()
+                                .authorizeHttpRequests(
+                                                auth -> auth
+                                                                .requestMatchers("/auth/login", "/auth/signup")
+                                                                .permitAll()
+                                                                .requestMatchers("/users/**").permitAll()
 
-                        .requestMatchers("/menuItems/**").permitAll()
-                        .requestMatchers("/orders/**").permitAll()
-                      
-                        .anyRequest().authenticated()
-             
-                        .requestMatchers("/booking-tables/**").permitAll()
-                        .requestMatchers("/reservations/**").permitAll()
-                        .anyRequest().authenticated())
-                .build();
+                                                                .requestMatchers("/menuItems/**").permitAll()
+                                                                .requestMatchers("/orders/**").permitAll()
 
-    }
+                                                                .requestMatchers("/booking-tables/**").permitAll()
+                                                                .requestMatchers("/reservations/**").permitAll()
+                                                                .anyRequest().authenticated())
+                                .build();
+
+        }
 }
