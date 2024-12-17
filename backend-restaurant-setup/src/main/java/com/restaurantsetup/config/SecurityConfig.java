@@ -17,6 +17,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login", "/auth/signup").permitAll()
                         .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/booking-tables/**").permitAll()
+                        .requestMatchers("/reservations/**").permitAll()
                         .anyRequest().authenticated())
                 .build();
     }
