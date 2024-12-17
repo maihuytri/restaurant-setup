@@ -1,11 +1,24 @@
 package com.restaurantsetup.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
+
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 
 @Entity
 @AllArgsConstructor
@@ -32,6 +45,12 @@ public class User {
     public User(String customerName, String contactTel) {
         this.customerName = customerName;
         this.contactTel = contactTel;
+
+   
+
+    // Constructors
+    public User() {
+
     }
 
     // Constructors

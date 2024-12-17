@@ -20,11 +20,15 @@ public class SecurityConfig {
                         auth -> auth
                         .requestMatchers("/auth/login", "/auth/signup").permitAll()
                         .requestMatchers("/users/**").permitAll()
+
                         .requestMatchers("/menuItems/**").permitAll()
                         .requestMatchers("/orders/**").permitAll()
-//                                .anyRequest().permitAll()
+                      
                         .anyRequest().authenticated()
-                )
+             
+                        .requestMatchers("/booking-tables/**").permitAll()
+                        .requestMatchers("/reservations/**").permitAll()
+                        .anyRequest().authenticated())
                 .build();
 
     }
