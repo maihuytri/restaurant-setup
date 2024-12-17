@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.restaurantsetup.entity.User;
 import com.restaurantsetup.repository.UserRepository;
 
@@ -39,9 +38,9 @@ public class UserService {
 
     public User updateUser(Long id, User userDetails) {
         User existingUser = getUserById(id);
-        existingUser.setName(userDetails.getName());
+        existingUser.setCustomerName(userDetails.getCustomerName());
         existingUser.setRole(userDetails.getRole());
-        existingUser.setContact(userDetails.getContact());
+        existingUser.setContactTel(userDetails.getContactTel());
         return userRepository.save(existingUser);
     }
 

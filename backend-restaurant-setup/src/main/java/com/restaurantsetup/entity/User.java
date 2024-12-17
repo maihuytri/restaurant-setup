@@ -1,6 +1,13 @@
 package com.restaurantsetup.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
+
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -12,36 +19,47 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String customerName;
     private String username;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    private String contactTel;
 
     @OneToMany(mappedBy = "user")
+    private List<Order> orders;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Reservation> reservations;
+
+    public User(String customerName, String contactTel) {
+        this.customerName = customerName;
+        this.contactTel = contactTel;
+
+   
 
     // Constructors
     public User() {
+
     }
 
-    public User(String name, Role role, Contact contact) {
-        this.name = name;
+    // Constructors
+    public User(String customerName, Role role, String contactTel) {
+        this.customerName = customerName;
         this.role = role;
-        this.contact = contact;
+        this.contactTel = contactTel;
     }
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @Embedded
-    private Contact contact;
-
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -50,12 +68,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getUsername() {
@@ -66,6 +84,14 @@ public class User {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -74,19 +100,27 @@ public class User {
         this.role = role;
     }
 
-    public Contact getContact() {
-        return contact;
+    public String getContactTel() {
+        return contactTel;
     }
 
-    public void setContact(Contact contact) {
-        this.contact = contact;
+    public void setContactTel(String contactTel) {
+        this.contactTel = contactTel;
     }
 
-    public String getPassword() {
-        return password;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }
