@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +20,13 @@ import com.restaurantsetup.dto.BookingTableResponse;
 import com.restaurantsetup.service.BookingTableService;
 
 @RestController
-@RequestMapping("/booking-tables")
+@RequestMapping("/tables")
+@PreAuthorize("hasRole('ROLE_MANAGER')")
 public class BookingTableController {
     @Autowired
     private BookingTableService bookingTableService;
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<?> createBookingTable(@RequestBody BookingTableRequest bookingTableRequest) {
         BookingTableResponse bookingTableResponse = bookingTableService.createBookingTable(bookingTableRequest);
         return new ResponseEntity<BookingTableResponse>(bookingTableResponse, HttpStatus.CREATED);
