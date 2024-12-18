@@ -2,9 +2,9 @@ package com.restaurantsetup.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import com.restaurantsetup.config.JwtUtil;
 import com.restaurantsetup.dto.APIResponse;
 import com.restaurantsetup.dto.LoginRequest;
@@ -37,7 +37,7 @@ public class AuthService {
 
             User user = new User();
             user.setUsername(loginRequest.getUsername());
-            user.setName(loginRequest.getUsername());
+            user.setCustomerName(loginRequest.getUsername());
             user.setRole(Role.customer);
             user.setPassword(loginRequest.getPassword());
             userService.createUser(user);

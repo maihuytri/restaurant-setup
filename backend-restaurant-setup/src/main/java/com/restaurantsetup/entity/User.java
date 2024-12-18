@@ -18,7 +18,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String customerName;
     private String username;
     private String password;
 
@@ -29,8 +29,8 @@ public class User {
     public User() {
     }
 
-    public User(String name, Role role, Contact contact) {
-        this.name = name;
+    public User(String customerName, Role role, Contact contact) {
+        this.customerName = customerName;
         this.role = role;
         this.contact = contact;
     }
@@ -50,12 +50,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getUsername() {
