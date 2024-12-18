@@ -6,12 +6,14 @@ import com.restaurantsetup.service.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/menuItems")
+@PreAuthorize("hasRole('ROLE_MANAGER')")
 public class MenuItemController {
 
     @Autowired
@@ -34,12 +36,13 @@ public class MenuItemController {
 
     @PostMapping("/create")
     public ResponseEntity<MenuItemResponse> createMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
-        System.out.println("menuitem: " + menuItemRequest.name() + menuItemRequest.price()) ;
+        System.out.println("menuitem: " + menuItemRequest.name() + menuItemRequest.price());
         return new ResponseEntity<>(menuItemService.createMenuItem(menuItemRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuItemResponse> editMenuItem(@PathVariable Long id, @RequestBody MenuItemRequest menuItemRequest) {
+    public ResponseEntity<MenuItemResponse> editMenuItem(@PathVariable Long id,
+            @RequestBody MenuItemRequest menuItemRequest) {
         return new ResponseEntity<>(menuItemService.updateMenuItem(id, menuItemRequest), HttpStatus.OK);
     }
 

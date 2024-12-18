@@ -45,7 +45,7 @@ const AddStaff = () => {
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
-                    body: JSON.stringify({ name, role: 'staff', username, phone, email }),
+                    body: JSON.stringify({ name, role: 'staff', username, password, email }),
                 });
 
             const result = await res.json();

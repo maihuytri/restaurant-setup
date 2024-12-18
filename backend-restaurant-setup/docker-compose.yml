@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  mysql-restaurant-setup:
+    image: mysql:8.0
+    container_name: mysql_restaurant-setup
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: restaurant-setup
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  springboot:
+    build: .
+    container_name: springboot-container-restaurant-setup
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-restaurant-setup
+    environment:     
+      MYSQL_HOST: mysql-restaurant-setup
+      MYSQL_DB: restaurant-setup
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+volumes:
+  mysql-data:
