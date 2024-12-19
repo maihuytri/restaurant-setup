@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
     isLoggedIn: boolean;
-    user: { username: string, token: string, role: Role } | null;
-    login: (username: string, token: string, role: Role) => void;
+    user: { username: string, token: string, role: Role, customername: string } | null;
+    login: (username: string, token: string, role: Role, customername: string) => void;
     logout: () => void
 }
 
@@ -14,11 +14,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState<{ username: string, token: string, role: Role } | null>(null);
-    const login = (username: string, token: string, role: Role) => {
+    const [user, setUser] = useState<{ username: string, token: string, role: Role, customername: string } | null>(null);
+    const login = (username: string, token: string, role: Role, customername: string) => {
         setIsLoggedIn(true);
-        setUser({ username, token, role });
-        localStorage.setItem("token", JSON.stringify({ username, token, role }));
+        setUser({ username, token, role, customername });
+        localStorage.setItem("token", JSON.stringify({ username, token, role, customername }));
     };
 
     const logout = () => {

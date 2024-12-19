@@ -1,35 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { categoies } from "../Category";
+import { categoies, searchCategories } from "../Category";
 import AddOrder from './PopupOrder';
-
-interface MenuItem {
-    id: number;
-    name: string;
-    description: string;
-    price: Number;
-    category: string
-}
+import { useAuth } from '../context/AuthContext';
+import { MenuItem } from '../Menu';
 
 const OrderMenu = () => {
+    const { user, isLoggedIn, logout } = useAuth();
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
     const [category, setCategory] = useState<string>("All");
     const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
 
-    useEffect(() => {
-        // fetch('http://localhost:8080/api/menu-items')
-        //     .then((response) => response.json())
-        //     .then((data) => setMenuItems(data))
-        //     .catch((error) => console.error('Error fetching menu items:', error));
-        const defaultMenuItems: Array<MenuItem> = [
-            { id: 1, name: "Pizza", description: "Delicious cheese pizza", category: "Main Course", price: 10.99 },
-            { id: 2, name: "Burger", description: "Beef burger with fries", category: "Fast Food", price: 8.99 },
-            { id: 3, name: "Pasta", description: "Creamy Alfredo pasta", category: "Main Course", price: 9.99 },
-            { id: 4, name: "Ice Cream", description: "Vanilla ice cream", category: "Dessert", price: 3.99 }
-        ];
+    const refreshData = async () => {
+        try {
 
-        console.log("category " + category);
-        setMenuItems(category == "All" ? defaultMenuItems : defaultMenuItems.filter(item => item.category == category));
+            let token = user?.token;
+            if (token == undefined) {
+                const stored_state = localStorage.getItem("token");
+                if (stored_state) {
+                    const o = JSON.parse(stored_state);
+                    token = o.token;
+                }
+            }
+
+            const res = await fetch(`${process.env.REACT_APP_APIURL}/menuItems?category=${category}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            })
+
+            const result = await res.json();
+            console.log("data " + result);
+            setMenuItems(result);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    useEffect(() => {
+        refreshData();
     }, [category]);
 
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -57,7 +66,7 @@ const OrderMenu = () => {
                     <span className='pl-2'>Category &nbsp;&nbsp;</span>
                     <span>
                         <select className="border p-2 w-full mt-2" onChange={handleCategoryChange}>
-                            {categoies.map((category, index) =>
+                            {searchCategories.map((category, index) =>
                                 <option key={index} value={category.title}>{category.title}</option>
                             )}
                         </select>

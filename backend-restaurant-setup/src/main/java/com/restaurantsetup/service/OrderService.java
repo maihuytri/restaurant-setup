@@ -28,33 +28,31 @@ public class OrderService {
     @Autowired
     UserRepository userRepository;
 
-    //get all orders
+    // get all orders
     public List<OrderResponse> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         return orders.stream().map(this::convertToOrderResponse).collect(Collectors.toList());
     }
 
-    //get order by order Id
+    // get order by order Id
     public OrderResponse getOrderById(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new RuntimeException("Order not found with id: " + orderId)
-        );
+                () -> new RuntimeException("Order not found with id: " + orderId));
         return convertToOrderResponse(order);
     }
 
-    //get orders by userId
+    // get orders by userId
     public List<OrderResponse> getOrdersByUserId(Long userId) {
         List<Order> orders = orderRepository.findOrdersByUser_Id(userId);
         return orders.stream().map(this::convertToOrderResponse).collect(Collectors.toList());
     }
 
-    //create an order
+    // create an order
     public OrderResponse createOrder(OrderRequest orderRequest) {
-        //get the menuItem
+        // get the menuItem
         MenuItemRequest menuItemRequest = orderRequest.menuItemRequest();
         MenuItem menuItem = menuItemRepository.findById(menuItemRequest.id()).orElseThrow(
-                () -> new IllegalArgumentException("Menuitem not found")
-        );
+                () -> new IllegalArgumentException("Menuitem not found"));
         User user = userRepository.findByContactTel(orderRequest.contactTel())
                 .orElseGet(() -> {
                     User newUser = new User();
@@ -62,7 +60,7 @@ public class OrderService {
                     newUser.setContactTel(orderRequest.contactTel());
                     return userRepository.save(newUser);
                 });
-        //create order
+        // create order
         Order order = new Order();
         order.setMenuItem(menuItem);
         order.setMenuItemCount(orderRequest.menuItemCount());
@@ -75,13 +73,13 @@ public class OrderService {
         return convertToOrderResponse(savedOrder);
     }
 
-    //update order
+    // update order
     public OrderResponse editOrder(Long orderId, OrderRequest updatedOrderRequest) {
         Order existingOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with Id: " + orderId));
         MenuItemRequest updatedMenuItemRequest = updatedOrderRequest.menuItemRequest();
-        MenuItem updateMenuItem = menuItemRepository.findById(updatedMenuItemRequest.id()).orElseThrow(() ->
-                new IllegalArgumentException("Menuitem not found"));
+        MenuItem updateMenuItem = menuItemRepository.findById(updatedMenuItemRequest.id())
+                .orElseThrow(() -> new IllegalArgumentException("Menuitem not found"));
         System.out.println("tsai test : " + updateMenuItem.getName());
         existingOrder.setMenuItem(updateMenuItem);
         existingOrder.setMenuItemCount(updatedOrderRequest.menuItemCount());
@@ -100,7 +98,7 @@ public class OrderService {
         return convertToOrderResponse(updatedOrder);
     }
 
-    //delete order by order id
+    // delete order by order id
     public void deleteOrder(Long orderId) {
         Order existingOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
@@ -115,8 +113,7 @@ public class OrderService {
                 menuItem.getName(),
                 menuItem.getDescription(),
                 menuItem.getPrice(),
-                menuItem.getCategory()
-        );
+                menuItem.getCategory());
         return new OrderResponse(
                 order.getId(),
                 order.getUser().getCustomerName(),
@@ -125,7 +122,7 @@ public class OrderService {
                 order.getNote(),
                 order.getStatus(),
                 menuItemResponse,
-                order.getTotalPrice()
-        );
+                order.getTotalPrice(),
+                order.getMenuItemCount());
     }
 }

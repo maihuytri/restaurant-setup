@@ -2,16 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { categoies } from "../Category";
 import MessageBox from './MessageBox';
 import ConfirmMessageBox from './ConfirmMessageBox';
-
-interface MenuItem {
-    id: number;
-    name: string;
-    description: string;
-    price: Number;
-    category: string
-}
+import { MenuItem } from '../Menu';
+import { useAuth } from '../context/AuthContext';
 
 function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeOrder: () => void }) {
+    const { user } = useAuth();
     const [customerName, setCustomerName] = useState('');
     const [contactInfo, setContactInfo] = useState('');
     const [quantity, setQuantity] = useState(1);
@@ -21,11 +16,17 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
     const [isShowMessageBoxConfirmModalOpen, setIsShowMessageBoxConfirmModalOpen] = useState(false);
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
+    const [note, setNote] = useState('');
+
+    useEffect(() => {
+        if (user != undefined) {
+            setCustomerName(user?.customername);
+        }
+    });
 
     const handleOrderSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        console.log("custome name " + quantity);
         if (!customerName) {
             setTitle("Message");
             setMessage("Please enter your name")
@@ -43,32 +44,6 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
         setTitle("Confirm Message");
         setMessage("Are you sure do you want to order?")
         setIsShowMessageBoxConfirmModalOpen(true);
-        return;
-
-        const order = {
-            customerName,
-            contactInfo,
-            menuItemId: selectedItem.id,
-            quantity,
-        };
-
-        fetch('http://localhost:8080/api/orders', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(order),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    alert('Order placed successfully!');
-                    // Reset form
-                    setCustomerName('');
-                    setContactInfo('');
-                    setQuantity(1);
-                } else {
-                    alert('Failed to place the order.');
-                }
-            })
-            .catch((error) => console.error('Error placing order:', error));
     };
 
     const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -88,8 +63,37 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
         setIsShowMessageBoxConfirmModalOpen(false);
     }
 
-    const handleOk = () => {
+    const handleOk = async () => {
         setIsShowMessageBoxConfirmModalOpen(false);
+        try {
+
+            const res = await fetch(`${process.env.REACT_APP_APIURL}/orders/create`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
+                    body: JSON.stringify({
+                        customerName, contactTel: contactInfo, menuItemCount: quantity, note,
+                        menuItemRequest: { ...selectedItem }
+                    }),
+                });
+            const result = await res.json();
+            if (result.errorCode == 200) {
+                setTitle("Message");
+                setMessage("You haven created customer successfully");
+                setIsShowMessageBoxModalOpen(true);
+            } else {
+                setTitle("Message");
+                setMessage(result.message);
+                setIsShowErrorMessageBoxModalOpen(true);
+            }
+
+        } catch (error) {
+            setTitle("Message");
+            setMessage("You haven't created menu successfully");
+            setIsShowErrorMessageBoxModalOpen(true);
+        }
+
+
         setTitle("Message");
         setMessage("You have order sucessfully.")
         setIsShowMessageBoxModalOpen(true);
@@ -132,6 +136,15 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
                                     onChange={(e) => setQuantity(Number(e.target.value))}
                                     min="1"
                                     required
+                                    className="block w-full border p-2 rounded"
+                                />
+                            </label>
+                            <label className="block mb-2">
+                                <span className="text-gray-700">Note</span>
+                                <input
+                                    type="text"
+                                    value={note}
+                                    onChange={(e) => setNote(e.target.value)}
                                     className="block w-full border p-2 rounded"
                                 />
                             </label>

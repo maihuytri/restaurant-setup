@@ -41,13 +41,11 @@ const Login = () => {
                 });
 
             const result = await res.json();
-            console.log(result.data.token);
-            console.log(JSON.stringify(result));
+            // console.log(result.data.token);
+            // console.log(JSON.stringify(result));
             if (result.errorCode == 200) {
 
-                login(username, result.data.token, result.data.role);
-                //login(username, result.data.token, "customer");
-
+                login(username, result.data.token, result.data.role, result.data.customername);
                 navigate('/');
             } else {
                 setTitle("Message");

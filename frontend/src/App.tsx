@@ -12,27 +12,8 @@ import AddStaff from './pages/AddStaff';
 import OrderList from './components/OrderList';
 import Reservation from './pages/Reservation';
 import TableManagement from './pages/TableManagement';
-
-// const App = () => {
-//   return (
-//     <AuthProvider>
-//       <Router>
-//         <Header />
-//         <LeftMenu />
-//         <Routes>
-//           <Route path="/" element={<Home />} />
-//           <Route path="/login" element={<Login />} />
-//           <Route path="/signup" element={<Signup />} />
-//           <Route path="/add-menu" element={<AddMenu />} />
-//           <Route path="/add-staff" element={<AddStaff />} />
-//           <Route path="/orders" element={<OrderList />} />
-//         </Routes>
-//       </Router>
-//     </AuthProvider>
-//   );
-// };
-
-// export default App;
+import MenuList from './components/MenuList';
+import UserList from './components/UserList';
 
 const App = () => {
   return (
@@ -41,15 +22,17 @@ const App = () => {
         <Header />
         <div className="flex">
           <LeftMenu />
-          <div className="flex-grow">
+          <div className="flex-grow p-4" >
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
-              <Route path="/add-menu" element={<AddMenu />} />
-              <Route path="/add-staff" element={<AddStaff />} />
+              <Route path="/menus" element={<MenuList />} />
+              <Route path="/customers" element={<UserList />} />
               <Route path="/orders" element={<OrderList />} />
               <Route path="/tables" element={<TableManagement />} />
+              <Route path="/view-orders" element={<OrderList />} />
+
               <Route path="/reservations" element={<Reservation />} />
             </Routes>
           </div>

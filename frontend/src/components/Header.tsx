@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
     const { user, isLoggedIn, logout } = useAuth();
+    console.log(user);
     const navigate = useNavigate();
     const handlLogout = () => {
         logout();
@@ -15,7 +16,7 @@ const Header = () => {
                 {isLoggedIn ? (
                     <>
                         <div className="mb-4 flex justify-end items-center p-2">
-                            <span className='pl-2'>Hi {user?.username} &nbsp; </span>
+                            <span className='pl-2'>Hi {user?.customername} &nbsp; </span>
                             <span>
                                 <button
                                     onClick={handlLogout}
