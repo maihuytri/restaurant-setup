@@ -9,6 +9,7 @@ import AddStaff from "./pages/AddStaff";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Reservation from "./pages/Reservation";
+import Reservations from "./pages/Reservations";
 import Signup from "./pages/Signup";
 import TableManagement from "./pages/TableManagement";
 
@@ -49,7 +50,8 @@ const App = () => {
               <Route path="/add-staff" element={<AddStaff />} />
               <Route path="/orders" element={<OrderList />} />
               <Route path="/tables" element={<TableManagement />} />
-              <Route path="/reservations" element={<Reservation />} />
+              <Route path="/create-reservation" element={<Reservation />} />
+              <Route path="/reservations" element={<Reservations />} />
               <Route path="/customers" element={<UserList />} />
             </Routes>
           </div>

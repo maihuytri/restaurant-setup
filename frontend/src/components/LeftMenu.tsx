@@ -13,7 +13,7 @@ const LeftMenu = () => {
       { label: "View Orders", path: "/orders" },
       { label: "Customer List", path: "/customers" },
       { label: "Add Table", path: "/tables" },
-      { label: "Reserve Table", path: "/reservations" },
+      { label: "Reserve Table", path: "/create-reservation" },
     ],
     staff: [
       { label: "View Orders", path: "/orders" },
@@ -22,7 +22,8 @@ const LeftMenu = () => {
     customer: [
       { label: "View Orders", path: "/view-orders" },
       { label: "Orders", path: "/" },
-      { label: "Reserve Table", path: "/reservations" },
+      { label: "Reserve Table", path: "/create-reservation" },
+      { label: "Reservation List", path: "/reservations" },
     ],
   };
 

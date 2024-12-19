@@ -70,7 +70,7 @@ const Reservation = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6">Reserve a Table</h1>
       <div className="mb-4">
-        <h2 className="text-xl font-bold">Available Tables</h2>
+        <h2 className="text-xl font-bold mb-2">Available Tables</h2>
         <ul className="space-y-4">
           {tables.map((table) => (
             <li
@@ -96,11 +96,7 @@ const Reservation = () => {
               )}
               {table.status === "RESERVED" && (
                 <button className={`px-4 py-2 rounded text-white bg-red-500`}>
-                  {selectedTable === table.id
-                    ? "Selected"
-                    : table.status === "RESERVED"
-                    ? "RESERVED"
-                    : "Select"}
+                  RESERVED
                 </button>
               )}
             </li>
@@ -132,7 +128,7 @@ const Reservation = () => {
         />
         <button
           onClick={handleReserve}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          className="bg-green-500  text-white px-4 py-2 rounded hover:bg-green-600"
         >
           Reserve Table
         </button>
