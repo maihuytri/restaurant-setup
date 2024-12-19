@@ -65,8 +65,10 @@ public class ReservationService {
                                 savedReservation.getBookingTable().getCapacity(),
                                 savedReservation.getBookingTable().getStatus()),
                         new UserResponse(savedReservation.getUser().getId(),
+                                savedReservation.getUser().getUsername(),
                                 savedReservation.getUser().getCustomerName(),
-                                savedReservation.getUser().getUsername()));
+                                savedReservation.getUser().getContactTel(),
+                                savedReservation.getUser().getRole().name()));
 
                 return reservationResponse;
             } else {
@@ -101,8 +103,11 @@ public class ReservationService {
                     new BookingTableResponse(reservation.getBookingTable().getId(),
                             reservation.getBookingTable().getName(), reservation.getBookingTable().getCapacity(),
                             reservation.getBookingTable().getStatus()),
-                    new UserResponse(reservation.getUser().getId(), reservation.getUser().getCustomerName(),
-                            reservation.getUser().getUsername()));
+                    new UserResponse(reservation.getUser().getId(),
+                            reservation.getUser().getUsername(),
+                            reservation.getUser().getCustomerName(),
+                            reservation.getUser().getContactTel(),
+                            reservation.getUser().getRole().name()));
             return reservationResponse;
         } catch (Exception e) {
             throw new Error(e.getMessage());
@@ -116,9 +121,11 @@ public class ReservationService {
                             res.getTime(),
                             new BookingTableResponse(res.getBookingTable().getId(), res.getBookingTable().getName(),
                                     res.getBookingTable().getCapacity(), res.getBookingTable().getStatus()),
-                            new UserResponse(res.getUser().getId(), res.getUser().getCustomerName(),
-                                    res.getUser()
-                                            .getUsername())))
+                            new UserResponse(res.getUser().getId(),
+                                    res.getUser().getUsername(),
+                                    res.getUser().getCustomerName(),
+                                    res.getUser().getContactTel(),
+                                    res.getUser().getRole().name())))
                     .toList();
             return reservationResponses;
         } catch (Exception e) {
@@ -136,9 +143,11 @@ public class ReservationService {
                             res.getTime(),
                             new BookingTableResponse(res.getBookingTable().getId(), res.getBookingTable().getName(),
                                     res.getBookingTable().getCapacity(), res.getBookingTable().getStatus()),
-                            new UserResponse(res.getUser().getId(), res.getUser().getCustomerName(),
-                                    res.getUser()
-                                            .getUsername())))
+                            new UserResponse(res.getUser().getId(),
+                                    res.getUser().getUsername(),
+                                    res.getUser().getCustomerName(),
+                                    res.getUser().getContactTel(),
+                                    res.getUser().getRole().name())))
                     .toList();
             return reservationResponses;
         } catch (Exception e) {
