@@ -71,7 +71,8 @@ public class AuthService {
             // Generate JWT token
             String token = jwtUtil.generateToken(user.getId(), user.getUsername(),
                     "ROLE_" + user.getRole().toString().toUpperCase());
-            LoginResponse loginResponse = new LoginResponse(token, user.getUsername(), user.getRole().toString());
+            LoginResponse loginResponse = new LoginResponse(token, user.getUsername(), user.getRole().toString(),
+                    user.getCustomerName());
 
             // Success response
             System.out.println("login Token " + token);

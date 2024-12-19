@@ -9,7 +9,7 @@ const ConfirmMessageBox = ({ onOk, onClose, title, message }: { onOk: () => void
                 <p>{message}</p>
                 <div className="flex justify-end mt-6">
                     <button onClick={onClose} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        Close
+                        Cancel
                     </button>
                     &nbsp;
                     <button onClick={onOk} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">

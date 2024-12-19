@@ -46,6 +46,7 @@ public class MenuItemController {
         return ResponseEntity.ok(menuItemService.getMenuItemsByStatus(status));
     }
 
+
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<MenuItemResponse> createMenuItem(@RequestBody MenuItemRequest menuItemRequest) {

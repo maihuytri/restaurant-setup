@@ -56,7 +56,7 @@ public class OrderService {
         // get the menuItem
         MenuItemRequest menuItemRequest = orderRequest.menuItemRequest();
         MenuItem menuItem = menuItemRepository.findById(menuItemRequest.id()).orElseThrow(
-                () -> new ResourceNotFoundException("Menuitem not found"));
+       () -> new ResourceNotFoundException("Menuitem not found"));
         //check if the menuItem is unavailable
         if (MenuItemStatus.UNAVAILABLE.name().equals(menuItem.getStatus())) {
             throw new IllegalArgumentException("The selected menu item is currently unavailable.");
@@ -69,6 +69,7 @@ public class OrderService {
             menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
         }
         menuItemRepository.save(menuItem);
+
         User user = userRepository.findByContactTel(orderRequest.contactTel())
                 .orElseGet(() -> {
                     User newUser = new User();
@@ -76,7 +77,6 @@ public class OrderService {
                     newUser.setContactTel(orderRequest.contactTel());
                     return userRepository.save(newUser);
                 });
-
         // create order
         Order order = new Order();
         order.setMenuItem(menuItem);
@@ -95,6 +95,7 @@ public class OrderService {
         Order existingOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with Id: " + orderId));
         MenuItemRequest updatedMenuItemRequest = updatedOrderRequest.menuItemRequest();
+
         MenuItem menuItem = menuItemRepository.findById(updatedMenuItemRequest.id())
                 .orElseThrow(() -> new ResourceNotFoundException("Menuitem not found"));
         if (MenuItemStatus.UNAVAILABLE.name().equals(menuItem.getStatus())) {

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
-@PreAuthorize("hasRole('ROLE_MANAGER')")
+@PreAuthorize("hasRole('ROLE_CUSTOMER')")
 public class OrderController {
 
     @Autowired
