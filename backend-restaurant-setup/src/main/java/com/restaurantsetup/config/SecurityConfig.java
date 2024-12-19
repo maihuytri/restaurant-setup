@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 
 @SuppressWarnings("deprecation")
@@ -23,7 +22,7 @@ public class SecurityConfig {
                                                                 .requestMatchers("/menuItems/**").permitAll()
                                                                 .requestMatchers("/orders/**").permitAll()
 
-                                                                .requestMatchers("/booking-tables/**").permitAll()
+                                                                .requestMatchers("/tables/**").permitAll()
                                                                 .requestMatchers("/reservations/**").permitAll()
                                                                 .anyRequest().authenticated())
                                 .build();
