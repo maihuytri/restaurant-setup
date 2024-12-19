@@ -8,26 +8,26 @@ const LeftMenu = () => {
   // Define menu items based on roles
   const menuItems: Record<string, { label: string; path: string }[]> = {
     manager: [
-      { label: "Add Menu Item", path: "/add-menu" },
-      { label: "Add Staff", path: "/add-staff" },
+      { label: "Menus", path: "/menus" },
       { label: "View Orders", path: "/orders" },
       { label: "Customer List", path: "/customers" },
       { label: "Add Table", path: "/tables" },
-      { label: "Reserve Table", path: "/reservations" },
+      { label: "Reserve Table", path: "/create-reservation" },
+      { label: "Reservation List", path: "/reservations" },
     ],
     staff: [
       { label: "View Orders", path: "/orders" },
       { label: "Customer List", path: "/customers" },
     ],
     customer: [
-      { label: "View Orders", path: "/view-orders" },
       { label: "Orders", path: "/" },
-      { label: "Reserve Table", path: "/reservations" },
+      { label: "View Orders", path: "/view-orders" },
+      { label: "Order Table", path: "/reservations" },
     ],
   };
 
   return (
-    <div className="w-64 bg-gray-100 h-screen p-4">
+    <div className="w-64 bg-gray-100 h-screen p-4   ">
       <ul className="space-y-2">
         {menuItems[user.role]?.map((item, index) => (
           <li key={index}>
