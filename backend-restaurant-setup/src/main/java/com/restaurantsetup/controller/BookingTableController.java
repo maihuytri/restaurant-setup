@@ -55,7 +55,7 @@ public class BookingTableController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<?> getBookingTableById(@PathVariable String name) {
+    public ResponseEntity<?> getBookingTableByName(@PathVariable String name) {
         BookingTableResponse bookingTableResponse = bookingTableService.getBookingTableByName(name);
         return new ResponseEntity<BookingTableResponse>(bookingTableResponse,
                 HttpStatus.OK);

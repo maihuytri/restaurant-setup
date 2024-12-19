@@ -75,6 +75,7 @@ public class ReservationService {
 
             // )
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new Error(e.getMessage());
         }
     }

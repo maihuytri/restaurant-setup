@@ -1,17 +1,16 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Login from './pages/Login';
-import OrderMenu from './components/OrderMenu';
-import Home from './pages/Home';
-import Signup from './pages/Signup';
-import Header from './components/Header';
-import LeftMenu from './components/LeftMenu';
-import AddMenu from './pages/AddMenu';
-import AddStaff from './pages/AddStaff';
-import OrderList from './components/OrderList';
-import Reservation from './pages/Reservation';
-import TableManagement from './pages/TableManagement';
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import LeftMenu from "./components/LeftMenu";
+import OrderList from "./components/OrderList";
+import UserList from "./components/UserList";
+import { AuthProvider } from "./context/AuthContext";
+import AddMenu from "./pages/AddMenu";
+import AddStaff from "./pages/AddStaff";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Reservation from "./pages/Reservation";
+import Signup from "./pages/Signup";
+import TableManagement from "./pages/TableManagement";
 
 // const App = () => {
 //   return (
@@ -51,6 +50,7 @@ const App = () => {
               <Route path="/orders" element={<OrderList />} />
               <Route path="/tables" element={<TableManagement />} />
               <Route path="/reservations" element={<Reservation />} />
+              <Route path="/customers" element={<UserList />} />
             </Routes>
           </div>
         </div>
