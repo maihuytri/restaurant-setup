@@ -14,7 +14,7 @@ interface UserResponse {
 }
 
 interface Reservation {
-  id: number;
+  reservationId: number;
   title: string;
   note: string;
   date: Date;
@@ -51,13 +51,32 @@ const ReservationList = () => {
     fetchReservations();
   }, [user?.token]);
 
+  const handleCancelReservation = async (id: number) => {
+    try {
+      let url = `http://localhost:8080/reservations/cancel-reservation/${id}`;
+
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      if (response.ok) {
+        alert("Your reservation is Cancelled!");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong!");
+    }
+  };
+
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-bold mb-4">Reservations</h2>
       <ul className="space-y-4">
-        {reservations.map((reservation) => (
+        {reservations.map((reservation: Reservation) => (
           <li
-            key={reservation.id}
+            key={reservation.reservationId}
             className="border p-4 rounded shadow-lg flex justify-between items-center"
           >
             <div>
@@ -73,7 +92,10 @@ const ReservationList = () => {
                 {new Date(reservation.date).toLocaleString()}
               </p>
             </div>
-            <button className="bg-red-500 hover:bg-red-600 p-2 text-white h-10 rounded-sm">
+            <button
+              onClick={() => handleCancelReservation(reservation.reservationId)}
+              className="bg-red-500 hover:bg-red-600 p-2 text-white h-10 rounded-sm"
+            >
               Cancel Reservation
             </button>
           </li>

@@ -14,6 +14,7 @@ const LeftMenu = () => {
       { label: "Customer List", path: "/customers" },
       { label: "Add Table", path: "/tables" },
       { label: "Reserve Table", path: "/create-reservation" },
+      { label: "Reservation List", path: "/reservations" },
     ],
     staff: [
       { label: "View Orders", path: "/orders" },
