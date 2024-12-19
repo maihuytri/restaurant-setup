@@ -40,6 +40,13 @@ public class MenuItemController {
         return ResponseEntity.ok(menuItemService.getMenuItemsByCategory(category));
     }
 
+    @GetMapping("/{status}")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    public ResponseEntity<List<MenuItemResponse>> getMenuItemsByStatus(@PathVariable String status) {
+        return ResponseEntity.ok(menuItemService.getMenuItemsByStatus(status));
+    }
+
+
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/create")
     public ResponseEntity<MenuItemResponse> createMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
@@ -49,8 +56,7 @@ public class MenuItemController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<MenuItemResponse> editMenuItem(@PathVariable Long id,
-            @RequestBody MenuItemRequest menuItemRequest) {
+    public ResponseEntity<MenuItemResponse> editMenuItem(@PathVariable Long id, @RequestBody MenuItemRequest menuItemRequest) {
         return new ResponseEntity<>(menuItemService.updateMenuItem(id, menuItemRequest), HttpStatus.OK);
     }
 

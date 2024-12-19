@@ -1,5 +1,6 @@
 package com.restaurantsetup.service;
 
+import com.restaurantsetup.Util.MenuItemStatus;
 import com.restaurantsetup.Util.OrderStatus;
 import com.restaurantsetup.dto.MenuItemRequest;
 import com.restaurantsetup.dto.MenuItemResponse;
@@ -8,11 +9,14 @@ import com.restaurantsetup.dto.OrderResponse;
 import com.restaurantsetup.entity.MenuItem;
 import com.restaurantsetup.entity.Order;
 import com.restaurantsetup.entity.User;
+import com.restaurantsetup.exception.InsufficientInventoryException;
+import com.restaurantsetup.exception.ResourceNotFoundException;
 import com.restaurantsetup.repository.MenuItemRepository;
 import com.restaurantsetup.repository.OrderRepository;
 import com.restaurantsetup.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +56,20 @@ public class OrderService {
         // get the menuItem
         MenuItemRequest menuItemRequest = orderRequest.menuItemRequest();
         MenuItem menuItem = menuItemRepository.findById(menuItemRequest.id()).orElseThrow(
-                () -> new IllegalArgumentException("Menuitem not found"));
+       () -> new ResourceNotFoundException("Menuitem not found"));
+        //check if the menuItem is unavailable
+        if (MenuItemStatus.UNAVAILABLE.name().equals(menuItem.getStatus())) {
+            throw new IllegalArgumentException("The selected menu item is currently unavailable.");
+        }
+        if (menuItem.getStock() - orderRequest.menuItemCount() < 0) {
+            throw new InsufficientInventoryException("Insufficient inventory for MenuTtem: " + menuItem.getName() + ". Available stock: " + menuItem.getStock());
+        }
+        menuItem.setStock(menuItem.getStock() - orderRequest.menuItemCount());
+        if (menuItem.getStock() == 0) {
+            menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
+        }
+        menuItemRepository.save(menuItem);
+
         User user = userRepository.findByContactTel(orderRequest.contactTel())
                 .orElseGet(() -> {
                     User newUser = new User();
@@ -76,15 +93,26 @@ public class OrderService {
     // update order
     public OrderResponse editOrder(Long orderId, OrderRequest updatedOrderRequest) {
         Order existingOrder = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found with Id: " + orderId));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with Id: " + orderId));
         MenuItemRequest updatedMenuItemRequest = updatedOrderRequest.menuItemRequest();
-        MenuItem updateMenuItem = menuItemRepository.findById(updatedMenuItemRequest.id())
-                .orElseThrow(() -> new IllegalArgumentException("Menuitem not found"));
-        System.out.println("tsai test : " + updateMenuItem.getName());
-        existingOrder.setMenuItem(updateMenuItem);
+
+        MenuItem menuItem = menuItemRepository.findById(updatedMenuItemRequest.id())
+                .orElseThrow(() -> new ResourceNotFoundException("Menuitem not found"));
+        if (MenuItemStatus.UNAVAILABLE.name().equals(menuItem.getStatus())) {
+            throw new IllegalArgumentException("The selected menu item is currently unavailable.");
+        }
+        if (menuItem.getStock() - updatedOrderRequest.menuItemCount() < 0) {
+            throw new InsufficientInventoryException("Insufficient inventory for MenuItem: " + menuItem.getName() + ". Available stock: " + menuItem.getStock());
+        }
+        menuItem.setStock(menuItem.getStock() - updatedOrderRequest.menuItemCount());
+        if (menuItem.getStock() == 0) {
+            menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
+        }
+        menuItemRepository.save(menuItem);
+        existingOrder.setMenuItem(menuItem);
         existingOrder.setMenuItemCount(updatedOrderRequest.menuItemCount());
         existingOrder.setNote(updatedOrderRequest.note());
-        existingOrder.setTotalPrice(updatedOrderRequest.menuItemCount() * updateMenuItem.getPrice());
+        existingOrder.setTotalPrice(updatedOrderRequest.menuItemCount() * menuItem.getPrice());
 
         User updateUser = userRepository.findByContactTel(updatedOrderRequest.contactTel())
                 .orElseGet(() -> {
@@ -100,11 +128,56 @@ public class OrderService {
 
     // delete order by order id
     public void deleteOrder(Long orderId) {
-        Order existingOrder = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new ResourceNotFoundException("Order not found with id: " + orderId));
+        if (order.getStatus() == OrderStatus.COMPLETED || order.getStatus() == OrderStatus.IN_PROGRESS) {
+            throw new IllegalStateException("Cannot delete an order that is COMPLETED or IN_PROGRESS.");
+        }
+        MenuItem menuItem = order.getMenuItem();
+        menuItem.setStock(menuItem.getStock() + order.getMenuItemCount());
+        if (menuItem.getStock() > 0 && MenuItemStatus.UNAVAILABLE.name().equals(menuItem.getStatus())) {
+            menuItem.setStatus(MenuItemStatus.AVAILABLE.name());
+        }
+        menuItemRepository.save(menuItem);
         orderRepository.deleteById(orderId);
-
     }
+
+    //cancel order (mark status to cancel)
+    public OrderResponse cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new ResourceNotFoundException("Order not found with id: " + orderId));
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new IllegalStateException("Order is COMPLETED and can not cancel.");
+        }
+        MenuItem menuItem = order.getMenuItem();
+        menuItem.setStock(menuItem.getStock() + order.getMenuItemCount());
+        if (menuItem.getStock() > 0 && MenuItemStatus.UNAVAILABLE.name().equals(menuItem.getStatus())) {
+            menuItem.setStatus(MenuItemStatus.AVAILABLE.name());
+        }
+        menuItemRepository.save(menuItem);
+        order.setStatus(OrderStatus.CANCELED);
+        Order canceledOrder = orderRepository.save(order);
+        return convertToOrderResponse(canceledOrder);
+    }
+
+    public OrderResponse updateOrderStatus(Long orderId, String newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID: " + orderId));
+        if (order.getStatus() == OrderStatus.COMPLETED || order.getStatus() == OrderStatus.CANCELED) {
+            throw new IllegalStateException("Cannot change the status of a completed or canceled order.");
+        }
+        // Update the status
+        if(newStatus.equals("COMPLETED")){
+            order.setStatus(OrderStatus.COMPLETED);
+        } else if(newStatus.equals("IN_PROGRESS")){
+            order.setStatus(OrderStatus.IN_PROGRESS);
+        } else if (newStatus.equals("CANCELED")){
+            order.setStatus(OrderStatus.CANCELED);
+        }
+        Order updatedOrder = orderRepository.save(order);
+        return convertToOrderResponse(updatedOrder);
+    }
+
 
     private OrderResponse convertToOrderResponse(Order order) {
         MenuItem menuItem = order.getMenuItem();
