@@ -93,6 +93,20 @@ public class ReservationService {
 
     }
 
+    public void cancelReservation(Long id) {
+        try {
+            Reservation reservation = reservationRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Reservation Not Found with this id " + id));
+            BookingTable bookingTable = reservation.getBookingTable();
+            bookingTable.setStatus("AVAILABLE");
+            bookingTableService.updateBookingTable(new BookingTableRequest(bookingTable.getName(),
+                    bookingTable.getCapacity(), bookingTable.getStatus()), bookingTable.getId());
+            reservationRepository.delete(reservation);
+        } catch (Exception e) {
+            throw new Error(e.getMessage());
+        }
+    }
+
     public ReservationResponse getReservationById(Long id) {
         try {
             Reservation reservation = reservationRepository.findById(id)

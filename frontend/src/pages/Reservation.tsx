@@ -95,7 +95,9 @@ const Reservation = () => {
                 </button>
               )}
               {table.status === "RESERVED" && (
-                <button className={`px-4 py-2 rounded text-white bg-red-500`}>
+                <button
+                  className={`px-4 py-2 rounded text-white bg-red-300 cursor-not-allowed`}
+                >
                   RESERVED
                 </button>
               )}
