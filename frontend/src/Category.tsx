@@ -1,7 +1,13 @@
-export type Category = { id: number, name: string };
+export type Category = { name: string };
 export const categoies = [
-    { id: -1, title: 'All' },
-    { id: 1, title: 'Main Course' },
-    { id: 2, title: 'Fast Food' },
-    { id: 3, title: 'Dessert' }
+    { title: 'Main Course' },
+    { title: 'Fast Food' },
+    { title: 'Dessert' }
+]
+
+export const searchCategories = [
+    { title: 'All' },
+    { title: 'Main Course' },
+    { title: 'Fast Food' },
+    { title: 'Dessert' }
 ]
