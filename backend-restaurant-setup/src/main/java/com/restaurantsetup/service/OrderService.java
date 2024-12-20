@@ -65,14 +65,12 @@ public class OrderService {
             response.setMessage("The selected menu item is currently unavailable.");
             return response;
         }
-
         if (menuItem.getStock() - orderRequest.menuItemCount() < 0) {
             response.setErrorCode(500);
             response.setMessage("Insufficient inventory for MenuItem:" + menuItem.getName() + ". Available stock: "
                     + menuItem.getStock());
             return response;
         }
-
         menuItem.setStock(menuItem.getStock() - orderRequest.menuItemCount());
         if (menuItem.getStock() == 0) {
             menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
@@ -101,11 +99,9 @@ public class OrderService {
 
         return response;
     }
-
     // update order
     public APIResponse editOrder(Long orderId, OrderRequest updatedOrderRequest) {
         APIResponse response = new APIResponse();
-
         Order existingOrder = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with Id: " + orderId));
         MenuItemRequest updatedMenuItemRequest = updatedOrderRequest.menuItemRequest();
@@ -118,14 +114,12 @@ public class OrderService {
             response.setMessage("The selected menu item is currently unavailable.");
             return response;
         }
-
         if (menuItem.getStock() - updatedOrderRequest.menuItemCount() < 0) {
             response.setErrorCode(500);
             response.setMessage("Insufficient inventory for MenuItem:" + menuItem.getName() + ". Available stock: "
                     + menuItem.getStock());
             return response;
         }
-
         menuItem.setStock(menuItem.getStock() - updatedOrderRequest.menuItemCount());
         if (menuItem.getStock() == 0) {
             menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
@@ -165,7 +159,6 @@ public class OrderService {
         }
         menuItemRepository.save(menuItem);
         orderRepository.deleteById(orderId);
-
     }
 
     // cancel order (mark status to cancel)
