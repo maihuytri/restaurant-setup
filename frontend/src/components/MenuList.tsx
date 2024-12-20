@@ -60,10 +60,6 @@ const MenuList = () => {
         refreshData();
     };
 
-    const handlSaveMenu = () => {
-        refreshData();
-    }
-
     const handleDeleteMenu = (menu: MenuItem | null) => {
         setSelectedMenu(menu);
         setTitle("Confirm");
@@ -116,6 +112,7 @@ const MenuList = () => {
                             <h3 className="text-lg font-bold">{item.name}</h3>
                             <p>Category: {item.category}</p>
                             <p>Price: ${item.price.toFixed(2)}</p>
+                            <p>Stock: ${item.stock.toFixed(2)}</p>
                             <p>Description: {item.description}</p>
                             <p>
                                 <button

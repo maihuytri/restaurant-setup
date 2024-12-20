@@ -17,6 +17,7 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('0');
+    const [stock, setStock] = useState('1');
     const [category, setCategory] = useState('');
     const [isShowMessageBoxModalOpen, setIsShowMessageBoxModalOpen] = useState(false);
     const [title, setTitle] = useState('');
@@ -53,14 +54,14 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
         try {
             if (!name) {
                 setTitle("Message");
-                setMessage("Please enter your name")
+                setMessage("Please enter your menu name")
                 setIsShowErrorMessageBoxModalOpen(true);
                 return;
             }
 
             if (!price) {
                 setTitle("Message");
-                setMessage("Please enter your username")
+                setMessage("Please enter your price")
                 setIsShowErrorMessageBoxModalOpen(true);
                 return;
             }
@@ -72,9 +73,9 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
                 return;
             }
 
-            if (!category) {
+            if (!stock) {
                 setTitle("Message");
-                setMessage("Please enter your password")
+                setMessage("Please enter your stock")
                 setIsShowErrorMessageBoxModalOpen(true);
                 return;
             }
@@ -85,7 +86,7 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
                     {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
-                        body: JSON.stringify({ name, description, category, price }),
+                        body: JSON.stringify({ name, description, category, price, stock }),
                     });
                 const result = await res.json();
                 setTitle("Message");
@@ -96,11 +97,11 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
-                        body: JSON.stringify({ name, description, category, price }),
+                        body: JSON.stringify({ name, description, category, price, stock }),
                     });
                 const result = await res.json();
                 setTitle("Message");
-                setMessage("You haven't created menu successfully");
+                setMessage("You have created menu successfully");
                 setIsShowMessageBoxModalOpen(true);
             }
         } catch (error) {
@@ -156,6 +157,17 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
                                     placeholder="Please enter your price"
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value)}
+                                    required
+                                    className="block w-full border p-2 rounded"
+                                />
+                            </div>
+                            <label className="block">Stock</label>
+                            <div>
+                                <input
+                                    type="number"
+                                    placeholder="Please enter your stock"
+                                    value={stock}
+                                    onChange={(e) => setStock(e.target.value)}
                                     required
                                     className="block w-full border p-2 rounded"
                                 />

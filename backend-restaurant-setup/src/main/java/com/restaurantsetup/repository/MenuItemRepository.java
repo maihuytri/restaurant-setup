@@ -10,7 +10,8 @@ import java.util.Optional;
 @Repository
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     List<MenuItem> findByCategory(String category);
+
     Optional<MenuItem> findMenuItemByName(String name);
 
-
+    List<MenuItem> findMenuItemsByStatus(String status);
 }

@@ -30,9 +30,14 @@ public class UserController {
     @GetMapping
     public List<UserResponse> getAllUsers() {
         List<UserResponse> userResponses = new ArrayList<>();
+        String role = "customer";
         for (User user : userService.getAllUsers()) {
+            role = "customer";
+            if (user.getRole() == Role.manager) {
+                role = "manager";
+            }
             UserResponse u = new UserResponse(user.getId(), user.getUsername(), user.getCustomerName(),
-                    user.getContactTel(), user.getContactTel());
+                    user.getContactTel(), role);
             userResponses.add(u);
         }
 

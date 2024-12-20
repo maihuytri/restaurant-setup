@@ -5,7 +5,28 @@ import ConfirmMessageBox from './ConfirmMessageBox';
 import { MenuItem } from '../Menu';
 import { useAuth } from '../context/AuthContext';
 
-function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeOrder: () => void }) {
+interface Order {
+    id: number;
+    customerName: string;
+    contactTel: string;
+    orderDate: string;
+    note: string;
+    quantity: number;
+    menuItem: MenuItem;
+    totalPrice: Number;
+    menuItemCount: Number;
+    status: string; // 'pending', 'completed', 'cancelled'
+}
+
+export type Status = { name: string };
+export const status = [
+    { name: 'PENDING' },
+    { name: 'IN_PROGRESS' },
+    { name: 'COMPLETED' },
+    { name: 'CANCELED' }
+]
+
+function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: MenuItem | null, selectedOrder: Order | null, closeOrder: () => void }) {
     const { user } = useAuth();
     const [customerName, setCustomerName] = useState('');
     const [contactInfo, setContactInfo] = useState('');
@@ -17,12 +38,19 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [note, setNote] = useState('');
+    const [statu, setStatus] = useState('');
 
     useEffect(() => {
-        if (user != undefined) {
+        if (user != undefined && selectedOrder == null) {
             setCustomerName(user?.customername);
+
+        } else if (selectedOrder) {
+            setCustomerName(selectedOrder.customerName);
+            setContactInfo(selectedOrder.contactTel);
+            setQuantity(selectedOrder.quantity);
+            setNote(selectedOrder.note);
         }
-    });
+    }, []);
 
     const handleOrderSubmit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -46,8 +74,8 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
         setIsShowMessageBoxConfirmModalOpen(true);
     };
 
-    const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setCategory(e.target.value);
+    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setStatus(e.target.value);
     };
 
     const handleClose = () => {
@@ -67,36 +95,55 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
         setIsShowMessageBoxConfirmModalOpen(false);
         try {
 
-            const res = await fetch(`${process.env.REACT_APP_APIURL}/orders/create`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
-                    body: JSON.stringify({
-                        customerName, contactTel: contactInfo, menuItemCount: quantity, note,
-                        menuItemRequest: { ...selectedItem }
-                    }),
-                });
-            const result = await res.json();
-            if (result.errorCode == 200) {
-                setTitle("Message");
-                setMessage("You haven created customer successfully");
-                setIsShowMessageBoxModalOpen(true);
+            if (!selectedOrder) {
+                const res = await fetch(`${process.env.REACT_APP_APIURL}/orders/create`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
+                        body: JSON.stringify({
+                            customerName, contactTel: contactInfo, menuItemCount: quantity, note,
+                            menuItemRequest: { ...selectedItem }
+                        }),
+                    });
+
+                const result = await res.json();
+                if (result.errorCode == 200) {
+                    setTitle("Message");
+                    setMessage("You have created customer successfully");
+                    setIsShowMessageBoxModalOpen(true);
+                } else {
+                    setTitle("Message");
+                    setMessage(result.message);
+                    setIsShowErrorMessageBoxModalOpen(true);
+                }
             } else {
-                setTitle("Message");
-                setMessage(result.message);
-                setIsShowErrorMessageBoxModalOpen(true);
+                const res = await fetch(`${process.env.REACT_APP_APIURL}/orders/${selectedOrder.id}`,
+                    {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
+                        body: JSON.stringify({
+                            customerName, contactTel: contactInfo, menuItemCount: quantity, note,
+                            menuItemRequest: { ...selectedItem }
+                        }),
+                    });
+
+                const result = await res.json();
+                if (result.errorCode == 200) {
+                    setTitle("Message");
+                    setMessage("You have updated customer successfully");
+                    setIsShowMessageBoxModalOpen(true);
+                } else {
+                    setTitle("Message");
+                    setMessage(result.message);
+                    setIsShowErrorMessageBoxModalOpen(true);
+                }
             }
 
         } catch (error) {
             setTitle("Message");
-            setMessage("You haven't created menu successfully");
+            setMessage("You haven't updated customer successfully");
             setIsShowErrorMessageBoxModalOpen(true);
         }
-
-
-        setTitle("Message");
-        setMessage("You have order sucessfully.")
-        setIsShowMessageBoxModalOpen(true);
     }
 
     const closeAddOrderModal = () => {
@@ -148,6 +195,18 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
                                     className="block w-full border p-2 rounded"
                                 />
                             </label>
+                            {selectedOrder && user?.role == "manager" && (
+                                <>
+                                    <label className="block mb-2">
+                                        <span className="text-gray-700">Status</span>
+                                        <select className="border p-2 w-full mt-2" onChange={handleStatusChange}>
+                                            {status.map((s, index) =>
+                                                <option key={index} value={s.name}>{s.name}</option>
+                                            )}
+                                        </select>
+                                    </label>
+                                </>
+                            )}
                             <button
                                 onClick={closeOrder}
                                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -164,7 +223,8 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
                         </form>
                     </div>
                 </div>
-            )}
+            )
+            }
             <div>
                 {isShowMessageBoxModalOpen && (
                     <MessageBox onClose={handleClose} title={title} message={message} />
@@ -177,7 +237,7 @@ function AddOrder({ selectedItem, closeOrder }: { selectedItem: MenuItem, closeO
                 )}
             </div>
 
-        </div>
+        </div >
     );
 };
 
