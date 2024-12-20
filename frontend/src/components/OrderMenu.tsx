@@ -85,8 +85,8 @@ const OrderMenu = () => {
                         <div>
                             <h2 className="text-lg font-bold">{item.name}</h2>
                             <p>{item.description}</p>
-                            <p>Price: ${item.price.toFixed(2)}</p>
-                            <p>Stock: {item.stock.toFixed(2)}</p>
+                            <p>Price: ${item.price}</p>
+                            <p>Stock: {item.stock}</p>
                         </div>
                         <button
                             onClick={() => openAddOrderModal(item)}

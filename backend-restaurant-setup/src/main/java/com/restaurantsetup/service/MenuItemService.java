@@ -90,6 +90,10 @@ public class MenuItemService {
         return menuItemsByStatus.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
+//    public List<MenuItemResponse> getMenuItemsByCategoryAndStatus(String categroy, String status) {
+//
+//    }
+
     // Conversion method to Response
     private MenuItemResponse convertToResponseDTO(MenuItem menuItem) {
         return new MenuItemResponse(
