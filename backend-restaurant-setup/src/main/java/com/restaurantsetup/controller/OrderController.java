@@ -52,8 +52,10 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<APIResponse> createOrder(@RequestBody OrderRequest orderRequest) {
-        return ResponseEntity.ok(orderService.createOrder(orderRequest));
+    public ResponseEntity<APIResponse> createOrder(HttpServletRequest request, @RequestBody OrderRequest orderRequest) {
+        Claims claim = (Claims) request.getAttribute("claims");
+        Long userId = Long.parseLong(claim.get("userId").toString());
+        return ResponseEntity.ok(orderService.createOrder(userId, orderRequest));
     }
 
     @PostMapping("/{orderId}/cancel")

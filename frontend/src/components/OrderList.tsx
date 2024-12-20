@@ -12,7 +12,7 @@ interface Order {
     note: string;
     quantity: number;
     menuItem: MenuItem;
-    totalPrice: Number;
+    totalPrice: number;
     menuItemCount: Number;
     status: string; // 'pending', 'completed', 'cancelled'
 }
@@ -122,7 +122,7 @@ const OrderList = () => {
                             <strong>Quantity:</strong> {"" + order.quantity}
                         </p>
                         <p>
-                            <strong>Total Price:</strong> ${order.totalPrice.toFixed(2)}
+                            <strong>Total Price:</strong> ${order.totalPrice}
                         </p>
                         <p>
                             <strong>Customer name:</strong> {order.customerName}
