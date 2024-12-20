@@ -1,6 +1,7 @@
 package com.restaurantsetup.controller;
 
 import com.restaurantsetup.Util.OrderStatus;
+import com.restaurantsetup.dto.APIResponse;
 import com.restaurantsetup.dto.OrderRequest;
 import com.restaurantsetup.dto.OrderResponse;
 import com.restaurantsetup.service.OrderService;
@@ -36,17 +37,53 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
-        return new ResponseEntity<>(orderService.createOrder(orderRequest), HttpStatus.CREATED);
+    public ResponseEntity<APIResponse> createOrder(@RequestBody OrderRequest orderRequest) {
+        APIResponse response = new APIResponse();
+        try {
+            OrderResponse orderResponse = orderService.createOrder(orderRequest);
+            response.setErrorCode(200);
+            response.setMessage("Order created successfully");
+            response.setData(orderResponse);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setErrorCode(500);
+            response.setMessage("Failed to create order: " + e.getMessage());
+            response.setData(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
     @PostMapping("/{orderId}/cancel")
-    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable Long orderId,@RequestBody OrderRequest orderRequest) {
-        return new ResponseEntity<>(orderService.cancelOrder(orderId), HttpStatus.OK);
+    public ResponseEntity<APIResponse> cancelOrder(@PathVariable Long orderId,@RequestBody OrderRequest orderRequest) {
+       APIResponse apiResponse = new APIResponse();
+       try {
+           OrderResponse orderResponse = orderService.cancelOrder(orderId);
+           apiResponse.setErrorCode(200);
+           apiResponse.setMessage("Order canceled successfully");
+           apiResponse.setData(orderResponse);
+           return ResponseEntity.ok(apiResponse);
+       } catch (Exception e) {
+           apiResponse.setErrorCode(500);
+           apiResponse.setMessage("Failed to cancel order: " + e.getMessage());
+           apiResponse.setData(null);
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+       }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderResponse> editOrder(@PathVariable Long id, @RequestBody OrderRequest orderRequest) {
-        return new ResponseEntity<>(orderService.editOrder(id, orderRequest), HttpStatus.OK);
+    public ResponseEntity<APIResponse> editOrder(@PathVariable Long id, @RequestBody OrderRequest orderRequest) {
+       APIResponse apiResponse = new APIResponse();
+       try {
+           OrderResponse orderResponse = orderService.editOrder(id, orderRequest);
+           apiResponse.setErrorCode(200);
+           apiResponse.setMessage("Order updated successfully");
+           apiResponse.setData(orderResponse);
+           return ResponseEntity.ok(apiResponse);
+       } catch(Exception e) {
+           apiResponse.setErrorCode(500);
+           apiResponse.setMessage("Failed to update order: " + e.getMessage());
+           apiResponse.setData(null);
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+       }
     }
 
     @DeleteMapping("/{id}")
