@@ -7,7 +7,7 @@ interface Table {
   id: number;
   name: string;
   capacity: number;
-  status: "AVAILABLE" | "RESERVED" | "OCCUPIED";
+  status: "AVAILABLE" | "RESERVED";
 }
 
 const TableManagement = () => {
@@ -178,7 +178,7 @@ const TableManagement = () => {
                 <div>
                   <button
                     onClick={() => handleEdit(table)}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-2"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
                   >
                     Edit
                   </button>
