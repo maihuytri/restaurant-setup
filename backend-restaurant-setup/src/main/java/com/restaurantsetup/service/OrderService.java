@@ -1,5 +1,12 @@
 package com.restaurantsetup.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.restaurantsetup.Util.OrderStatus;
 import com.restaurantsetup.dto.MenuItemRequest;
 import com.restaurantsetup.dto.MenuItemResponse;
@@ -11,11 +18,6 @@ import com.restaurantsetup.entity.User;
 import com.restaurantsetup.repository.MenuItemRepository;
 import com.restaurantsetup.repository.OrderRepository;
 import com.restaurantsetup.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {

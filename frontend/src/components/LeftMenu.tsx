@@ -22,7 +22,8 @@ const LeftMenu = () => {
     customer: [
       { label: "Orders", path: "/" },
       { label: "View Orders", path: "/view-orders" },
-      { label: "Order Table", path: "/reservations" },
+      { label: "Reserve Table", path: "/create-reservation" },
+      { label: "Reservation List", path: "/reservations" },
     ],
   };
 

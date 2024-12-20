@@ -33,6 +33,7 @@ public class ReservationService {
     public ReservationResponse createReservation(ReservationRequest reservationRequest, Long bookingTableId,
             Long userId) {
         try {
+
             BookingTable bookingTable = bookingTableRepository.findById(bookingTableId).orElseThrow(
                     () -> new ResourceNotFoundException("Booking Table Not Found with this id " + bookingTableId));
 
