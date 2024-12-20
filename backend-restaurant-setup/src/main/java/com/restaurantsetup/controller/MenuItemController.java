@@ -1,7 +1,9 @@
 package com.restaurantsetup.controller;
 
+import com.restaurantsetup.dto.APIResponse;
 import com.restaurantsetup.dto.MenuItemRequest;
 import com.restaurantsetup.dto.MenuItemResponse;
+import com.restaurantsetup.dto.OrderResponse;
 import com.restaurantsetup.service.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -47,16 +49,39 @@ public class MenuItemController {
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/create")
-    public ResponseEntity<MenuItemResponse> createMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
-        System.out.println("menuitem: " + menuItemRequest.name() + menuItemRequest.price());
-        return new ResponseEntity<>(menuItemService.createMenuItem(menuItemRequest), HttpStatus.CREATED);
+    public ResponseEntity<APIResponse> createMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
+        APIResponse response = new APIResponse();
+        try {
+            MenuItemResponse menuItemResponse = menuItemService.createMenuItem(menuItemRequest);
+            response.setErrorCode(200);
+            response.setMessage("MenuItem created successfully");
+            response.setData(menuItemResponse);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setErrorCode(500);
+            response.setMessage("Failed to create menuItem: " + e.getMessage());
+            response.setData(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<MenuItemResponse> editMenuItem(@PathVariable Long id,
+    public ResponseEntity<APIResponse> editMenuItem(@PathVariable Long id,
             @RequestBody MenuItemRequest menuItemRequest) {
-        return new ResponseEntity<>(menuItemService.updateMenuItem(id, menuItemRequest), HttpStatus.OK);
+        APIResponse response = new APIResponse();
+        try {
+            MenuItemResponse menuItemResponse = menuItemService.updateMenuItem(id, menuItemRequest);
+            response.setErrorCode(200);
+            response.setMessage("MenuItem updated successfully");
+            response.setData(menuItemResponse);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setErrorCode(500);
+            response.setMessage("Failed to update menuItem: " + e.getMessage());
+            response.setData(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")

@@ -1,19 +1,16 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Login from './pages/Login';
-import OrderMenu from './components/OrderMenu';
-import Home from './pages/Home';
-import Signup from './pages/Signup';
-import Header from './components/Header';
-import LeftMenu from './components/LeftMenu';
-import AddMenu from './pages/AddMenu';
-import AddStaff from './pages/AddStaff';
-import OrderList from './components/OrderList';
-import Reservation from './pages/Reservation';
-import TableManagement from './pages/TableManagement';
-import MenuList from './components/MenuList';
-import UserList from './components/UserList';
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import LeftMenu from "./components/LeftMenu";
+import MenuList from "./components/MenuList";
+import OrderList from "./components/OrderList";
+import UserList from "./components/UserList";
+import { AuthProvider } from "./context/AuthContext";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Reservation from "./pages/Reservation";
+import Reservations from "./pages/Reservations";
+import Signup from "./pages/Signup";
+import TableManagement from "./pages/TableManagement";
 
 const App = () => {
   return (
@@ -22,7 +19,7 @@ const App = () => {
         <Header />
         <div className="flex">
           <LeftMenu />
-          <div className="flex-grow p-4" >
+          <div className="flex-grow p-4">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -31,9 +28,9 @@ const App = () => {
               <Route path="/customers" element={<UserList />} />
               <Route path="/orders" element={<OrderList />} />
               <Route path="/tables" element={<TableManagement />} />
+              <Route path="/create-reservation" element={<Reservation />} />
+              <Route path="/reservations" element={<Reservations />} />
               <Route path="/view-orders" element={<OrderList />} />
-
-              <Route path="/reservations" element={<Reservation />} />
             </Routes>
           </div>
         </div>

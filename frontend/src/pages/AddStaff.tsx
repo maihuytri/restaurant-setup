@@ -57,7 +57,7 @@ const AddStaff = ({ selectedUser, closeMenu }: { selectedUser: User | null, clos
                 return;
             }
 
-            if (!password) {
+            if (!password && id == -1) {
                 setTitle("Message");
                 setMessage("Please enter your password")
                 setIsShowErrorMessageBoxModalOpen(true);

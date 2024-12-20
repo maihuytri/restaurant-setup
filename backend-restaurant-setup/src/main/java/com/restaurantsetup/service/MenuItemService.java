@@ -37,7 +37,6 @@ public class MenuItemService {
         return all.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
-    // create a menuItem
     public MenuItemResponse createMenuItem(MenuItemRequest menuItemRequest) {
         if (menuItemRequest.price() == null || menuItemRequest.price() <= 0) {
             throw new IllegalArgumentException("Price must be provided and positive");
@@ -51,7 +50,6 @@ public class MenuItemService {
         menuItem.setPrice(menuItemRequest.price());
         menuItem.setCategory(menuItemRequest.category());
         menuItem.setStock(menuItemRequest.stock());
-
         menuItem.setStatus(
                 menuItemRequest.stock() <= 0 ? MenuItemStatus.UNAVAILABLE.name() : MenuItemStatus.AVAILABLE.name());
         MenuItem savedMenuItem = menuItemRepository.save(menuItem);
@@ -102,5 +100,4 @@ public class MenuItemService {
                 menuItem.getCategory(),
                 menuItem.getStock());
     }
-
 }

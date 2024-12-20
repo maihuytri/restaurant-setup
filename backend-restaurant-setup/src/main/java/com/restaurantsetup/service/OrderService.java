@@ -61,8 +61,6 @@ public class OrderService {
                 () -> new ResourceNotFoundException("Menuitem not found"));
         // check if the menuItem is unavailable
         if (MenuItemStatus.UNAVAILABLE.name().equals(menuItem.getStatus())) {
-            // throw new IllegalArgumentException("The selected menu item is currently
-            // unavailable.");
             response.setErrorCode(500);
             response.setMessage("The selected menu item is currently unavailable.");
             return response;
@@ -74,6 +72,7 @@ public class OrderService {
                     + menuItem.getStock());
             return response;
         }
+
         menuItem.setStock(menuItem.getStock() - orderRequest.menuItemCount());
         if (menuItem.getStock() == 0) {
             menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
@@ -126,6 +125,7 @@ public class OrderService {
                     + menuItem.getStock());
             return response;
         }
+
         menuItem.setStock(menuItem.getStock() - updatedOrderRequest.menuItemCount());
         if (menuItem.getStock() == 0) {
             menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
@@ -165,6 +165,7 @@ public class OrderService {
         }
         menuItemRepository.save(menuItem);
         orderRepository.deleteById(orderId);
+
     }
 
     // cancel order (mark status to cancel)
