@@ -49,6 +49,7 @@ function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: M
             setContactInfo(selectedOrder.contactTel);
             setQuantity(selectedOrder.quantity);
             setNote(selectedOrder.note);
+            setOrderStatus(selectedOrder.status);
         }
     }, []);
 
