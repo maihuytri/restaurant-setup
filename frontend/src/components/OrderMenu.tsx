@@ -25,7 +25,7 @@ const OrderMenu = () => {
 
             const res = await fetch(`${process.env.REACT_APP_APIURL}/menuItems?category=${category}`, {
                 method: 'GET',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json' },
             })
 
             const result = await res.json();
@@ -57,6 +57,7 @@ const OrderMenu = () => {
     // Close modal
     const closeAddOrderModal = () => {
         setIsAddOrderModalOpen(false);
+        refreshData();
     };
 
     return (
@@ -85,6 +86,7 @@ const OrderMenu = () => {
                             <h2 className="text-lg font-bold">{item.name}</h2>
                             <p>{item.description}</p>
                             <p>Price: ${item.price.toFixed(2)}</p>
+                            <p>Stock: {item.stock.toFixed(2)}</p>
                         </div>
                         <button
                             onClick={() => openAddOrderModal(item)}
@@ -97,7 +99,7 @@ const OrderMenu = () => {
             </ul>
 
             {isAddOrderModalOpen && selectedItem && (
-                <AddOrder selectedItem={selectedItem} closeOrder={closeAddOrderModal}></AddOrder>
+                <AddOrder selectedItem={selectedItem} selectedOrder={null} closeOrder={closeAddOrderModal}></AddOrder>
             )}
         </div>
     );

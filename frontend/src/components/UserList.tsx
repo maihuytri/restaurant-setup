@@ -63,10 +63,10 @@ const UserList = () => {
         refreshData();
     }
 
-    const handleDeleteUser = (user: User | null) => {
-        setSelectedUser(user);
+    const handleDeleteUser = (u: User | null) => {
+        setSelectedUser(u);
         setTitle("Confirm");
-        setMessage(`Are you sure do you want to delete this ${selectedUser?.username} ?`);
+        setMessage(`Are you sure do you want to delete this ${u?.customerName} ?`);
         setIsShowMessageBoxModalOpen(true);
 
     }
@@ -78,6 +78,9 @@ const UserList = () => {
     const handleOnOk = async () => {
         try {
 
+            if (!selectedUser)
+                return;
+            console.log(JSON.stringify(selectedUser));
             let token = user?.token;
             if (token == undefined) {
                 const stored_state = localStorage.getItem("token");
@@ -91,6 +94,7 @@ const UserList = () => {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             })
+            setSelectedUser(null);
             setIsShowMessageBoxModalOpen(false);
             refreshData();
         } catch (error) {

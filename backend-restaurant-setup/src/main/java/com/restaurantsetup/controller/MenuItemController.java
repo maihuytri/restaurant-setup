@@ -20,8 +20,7 @@ public class MenuItemController {
     @Autowired
     private MenuItemService menuItemService;
 
-    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_CUSTOMER')")
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<MenuItemResponse>> getAllMenuItems(@RequestParam(required = false) String category) {
         if (category == null || category.isEmpty() || category.equals("All"))
             return ResponseEntity.ok(menuItemService.getAllMenuItems());
@@ -38,6 +37,12 @@ public class MenuItemController {
     @GetMapping("/categories/{category}")
     public ResponseEntity<List<MenuItemResponse>> getMenuItemsByCategory(@PathVariable String category) {
         return ResponseEntity.ok(menuItemService.getMenuItemsByCategory(category));
+    }
+
+    @GetMapping("/{status}")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    public ResponseEntity<List<MenuItemResponse>> getMenuItemsByStatus(@PathVariable String status) {
+        return ResponseEntity.ok(menuItemService.getMenuItemsByStatus(status));
     }
 
     @PreAuthorize("hasRole('ROLE_MANAGER')")
