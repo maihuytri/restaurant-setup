@@ -161,7 +161,7 @@ const Reservation = () => {
         />
         <input
           type="text"
-          placeholder="Time"
+          placeholder="e.g.12:00"
           value={time}
           onChange={(e) => setTime(e.target.value)}
           className="block w-full mb-2 border p-2 rounded"
