@@ -78,7 +78,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserRequest userDetails) {
+    public ResponseEntity<APIResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userDetails) {
+        APIResponse response = new APIResponse();
         User user = new User();
 
         user.setUsername(userDetails.username());
@@ -88,7 +89,9 @@ public class UserController {
         user.setRole(userDetails.role().toLowerCase().equals("customer") ? Role.customer : Role.manager);
 
         User updatedUser = userService.updateUser(id, user);
-        return ResponseEntity.ok(updatedUser);
+        response.setErrorCode(200);
+        response.setData(updatedUser);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

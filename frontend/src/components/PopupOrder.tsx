@@ -110,7 +110,7 @@ function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: M
                 const result = await res.json();
                 if (result.errorCode == 200) {
                     setTitle("Message");
-                    setMessage("You have created customer successfully");
+                    setMessage("You have placed order successfully");
                     setIsShowMessageBoxModalOpen(true);
                 } else {
                     setTitle("Message");
@@ -131,7 +131,7 @@ function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: M
                 const result = await res.json();
                 if (result.errorCode == 200) {
                     setTitle("Message");
-                    setMessage("You have updated customer successfully");
+                    setMessage("You have updated order successfully");
                     setIsShowMessageBoxModalOpen(true);
                 } else {
                     setTitle("Message");
@@ -142,7 +142,7 @@ function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: M
 
         } catch (error) {
             setTitle("Message");
-            setMessage("You haven't updated customer successfully");
+            setMessage("The system is busy");
             setIsShowErrorMessageBoxModalOpen(true);
         }
     }
