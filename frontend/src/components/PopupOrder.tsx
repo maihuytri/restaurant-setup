@@ -38,7 +38,7 @@ function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: M
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [note, setNote] = useState('');
-    const [statu, setStatus] = useState('');
+    const [orerStatus, setOrderStatus] = useState('PENDING');
 
     useEffect(() => {
         if (user != undefined && selectedOrder == null) {
@@ -75,7 +75,7 @@ function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: M
     };
 
     const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setStatus(e.target.value);
+        setOrderStatus(e.target.value);
     };
 
     const handleClose = () => {
@@ -122,7 +122,7 @@ function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: M
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user?.token}` },
                         body: JSON.stringify({
-                            customerName, contactTel: contactInfo, menuItemCount: quantity, note,
+                            customerName, contactTel: contactInfo, menuItemCount: quantity, note, status: orerStatus,
                             menuItemRequest: { ...selectedItem }
                         }),
                     });
@@ -199,7 +199,7 @@ function AddOrder({ selectedItem, selectedOrder, closeOrder }: { selectedItem: M
                                 <>
                                     <label className="block mb-2">
                                         <span className="text-gray-700">Status</span>
-                                        <select className="border p-2 w-full mt-2" onChange={handleStatusChange}>
+                                        <select value={orerStatus} className="border p-2 w-full mt-2" onChange={handleStatusChange}>
                                             {status.map((s, index) =>
                                                 <option key={index} value={s.name}>{s.name}</option>
                                             )}
