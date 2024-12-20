@@ -111,8 +111,8 @@ const MenuList = () => {
                         <li key={item.id} className="border p-4 rounded shadow-lg">
                             <h3 className="text-lg font-bold">{item.name}</h3>
                             <p>Category: {item.category}</p>
-                            <p>Price: ${item.price.toFixed(2)}</p>
-                            <p>Stock: ${item.stock.toFixed(2)}</p>
+                            <p>Price: ${item.price}</p>
+                            <p>Stock: ${item.stock}</p>
                             <p>Description: {item.description}</p>
                             <p>
                                 <button
