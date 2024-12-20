@@ -31,31 +31,32 @@ const ReservationList = () => {
 
   const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        setLoading(true);
-        if (user?.token) {
-          let userId = extractUserIdFromToken(user?.token);
+  const fetchReservations = async () => {
+    try {
+      setLoading(true);
+      if (user?.token) {
+        let userId = extractUserIdFromToken(user?.token);
 
-          let url =
-            user?.role === "manager"
-              ? `http://localhost:8080/reservations/list`
-              : `http://localhost:8080/reservations/list/${userId}`;
-          const response = await fetch(url, {
-            headers: {
-              Authorization: `Bearer ${user?.token}`,
-            },
-          });
-          const data: Reservation[] = await response.json();
-          setReservations(data);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
+        let url =
+          user?.role === "manager"
+            ? `http://localhost:8080/reservations/list`
+            : `http://localhost:8080/reservations/list/${userId}`;
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
+        const data: Reservation[] = await response.json();
+        setReservations(data);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchReservations();
   }, [user?.token]);
 
@@ -71,6 +72,7 @@ const ReservationList = () => {
       });
       if (response.ok) {
         alert("Your reservation is Canceled!");
+        fetchReservations();
       }
     } catch (error) {
       console.log(error);
@@ -102,8 +104,7 @@ const ReservationList = () => {
                       {reservation.bookingTableResponse.name}
                     </p>
                     <p>
-                      <strong>Date & Time:</strong>{" "}
-                      {new Date(reservation.date).toLocaleString()}
+                      <strong>Time:</strong> {reservation.time}
                     </p>
                   </div>
                   <button
