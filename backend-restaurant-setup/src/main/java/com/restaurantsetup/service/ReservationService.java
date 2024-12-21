@@ -1,6 +1,6 @@
 package com.restaurantsetup.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +44,10 @@ public class ReservationService {
                 Reservation reservation = new Reservation();
                 reservation.setNote(reservationRequest.note());
                 reservation.setTitle(reservationRequest.title());
-                LocalDate now = LocalDate.now();
-                reservation.setDate(LocalDate.of(now.getYear(), now.getMonth(), now.getDayOfMonth()));
+                reservation.setStatus("PENDING");
+                LocalDateTime now = LocalDateTime.now();
+                reservation.setDate(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(),
+                        now.getMinute()));
                 reservation.setTime(reservationRequest.time());
                 reservation.setBookingTable(bookingTable);
                 reservation.setUser(user);
@@ -61,6 +63,7 @@ public class ReservationService {
                         savedReservation.getTitle(),
                         savedReservation.getDate(),
                         savedReservation.getTime(),
+                        savedReservation.getStatus(),
                         new BookingTableResponse(savedReservation.getBookingTable().getId(),
                                 savedReservation.getBookingTable().getName(),
                                 savedReservation.getBookingTable().getCapacity(),
@@ -75,6 +78,51 @@ public class ReservationService {
             } else {
                 throw new RuntimeException("This table is already reserved");
             }
+
+            // )
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new Error(e.getMessage());
+        }
+    }
+
+    public ReservationResponse editReservation(ReservationRequest reservationRequest, Long reservationId) {
+        try {
+            Reservation reservation = reservationRepository.findById(reservationId)
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Reservation Not Found with this id " + reservationId));
+            if (reservationRequest.title() != null) {
+                reservation.setTitle(reservationRequest.title());
+            }
+            if (reservationRequest.note() != null) {
+                reservation.setNote(reservationRequest.note());
+            }
+            if (reservationRequest.time() != null) {
+                reservation.setTime(reservationRequest.time());
+            }
+            if (reservationRequest.status() != null) {
+                reservation.setStatus(reservationRequest.status());
+            }
+
+            Reservation savedReservation = reservationRepository.save(reservation);
+            ReservationResponse reservationResponse = new ReservationResponse(
+                    savedReservation.getId(),
+                    savedReservation.getNote(),
+                    savedReservation.getTitle(),
+                    savedReservation.getDate(),
+                    savedReservation.getTime(),
+                    savedReservation.getStatus(),
+                    new BookingTableResponse(savedReservation.getBookingTable().getId(),
+                            savedReservation.getBookingTable().getName(),
+                            savedReservation.getBookingTable().getCapacity(),
+                            savedReservation.getBookingTable().getStatus()),
+                    new UserResponse(savedReservation.getUser().getId(),
+                            savedReservation.getUser().getUsername(),
+                            savedReservation.getUser().getCustomerName(),
+                            savedReservation.getUser().getContactTel(),
+                            savedReservation.getUser().getRole().name()));
+
+            return reservationResponse;
 
             // )
         } catch (Exception e) {
@@ -104,7 +152,8 @@ public class ReservationService {
             bookingTable.setStatus("AVAILABLE");
             bookingTableService.updateBookingTable(new BookingTableRequest(bookingTable.getName(),
                     bookingTable.getCapacity(), bookingTable.getStatus()), bookingTable.getId());
-            reservationRepository.delete(reservation);
+            reservation.setStatus("CANCELED");
+            reservationRepository.save(reservation);
         } catch (Exception e) {
             throw new Error(e.getMessage());
         }
@@ -116,6 +165,7 @@ public class ReservationService {
                     .orElseThrow(() -> new ResourceNotFoundException("Reservation Not Found with this id " + id));
             ReservationResponse reservationResponse = new ReservationResponse(reservation.getId(),
                     reservation.getNote(), reservation.getTitle(), reservation.getDate(), reservation.getTime(),
+                    reservation.getStatus(),
                     new BookingTableResponse(reservation.getBookingTable().getId(),
                             reservation.getBookingTable().getName(), reservation.getBookingTable().getCapacity(),
                             reservation.getBookingTable().getStatus()),
@@ -134,7 +184,7 @@ public class ReservationService {
         try {
             List<ReservationResponse> reservationResponses = reservationRepository.findAll().stream()
                     .map(res -> new ReservationResponse(res.getId(), res.getNote(), res.getTitle(), res.getDate(),
-                            res.getTime(),
+                            res.getTime(), res.getStatus(),
                             new BookingTableResponse(res.getBookingTable().getId(), res.getBookingTable().getName(),
                                     res.getBookingTable().getCapacity(), res.getBookingTable().getStatus()),
                             new UserResponse(res.getUser().getId(),
@@ -151,12 +201,13 @@ public class ReservationService {
 
     public List<ReservationResponse> getAllReservationsByUserId(Long userId) {
         try {
-            User user = userRepository.findById(userId)
+            userRepository.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException("User Not Found with this id " + userId));
             List<ReservationResponse> reservationResponses = reservationRepository.findReservationsByUserId(userId)
                     .stream()
                     .map(res -> new ReservationResponse(res.getId(), res.getNote(), res.getTitle(), res.getDate(),
                             res.getTime(),
+                            res.getStatus(),
                             new BookingTableResponse(res.getBookingTable().getId(), res.getBookingTable().getName(),
                                     res.getBookingTable().getCapacity(), res.getBookingTable().getStatus()),
                             new UserResponse(res.getUser().getId(),

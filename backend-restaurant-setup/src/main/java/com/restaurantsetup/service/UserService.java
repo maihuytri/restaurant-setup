@@ -38,6 +38,7 @@ public class UserService {
 
     public User updateUser(Long id, User userDetails) {
         User existingUser = getUserById(id);
+        existingUser.setUsername(userDetails.getUsername());
         existingUser.setCustomerName(userDetails.getCustomerName());
         existingUser.setRole(userDetails.getRole());
         existingUser.setContactTel(userDetails.getContactTel());

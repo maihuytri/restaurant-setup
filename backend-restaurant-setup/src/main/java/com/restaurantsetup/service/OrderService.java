@@ -53,7 +53,7 @@ public class OrderService {
     }
 
     // create an order
-    public APIResponse createOrder(OrderRequest orderRequest) {
+    public APIResponse createOrder(Long userId, OrderRequest orderRequest) {
         APIResponse response = new APIResponse();
         // get the menuItem
         MenuItemRequest menuItemRequest = orderRequest.menuItemRequest();
@@ -76,13 +76,15 @@ public class OrderService {
             menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
         }
         menuItemRepository.save(menuItem);
-        User user = userRepository.findByContactTel(orderRequest.contactTel())
-                .orElseGet(() -> {
-                    User newUser = new User();
-                    newUser.setCustomerName(orderRequest.customerName());
-                    newUser.setContactTel(orderRequest.contactTel());
-                    return userRepository.save(newUser);
-                });
+        // User user = userRepository.findByContactTel(orderRequest.contactTel())
+        // .orElseGet(() -> {
+        // User newUser = new User();
+        // newUser.setCustomerName(orderRequest.customerName());
+        // newUser.setContactTel(orderRequest.contactTel());
+        // return userRepository.save(newUser);
+        // });
+
+        User user = userRepository.getById(userId);
 
         // create order
         Order order = new Order();
@@ -120,7 +122,7 @@ public class OrderService {
                     + menuItem.getStock());
             return response;
         }
-        menuItem.setStock(menuItem.getStock() - updatedOrderRequest.menuItemCount());
+        menuItem.setStock(menuItem.getStock() + existingOrder.getMenuItemCount() - updatedOrderRequest.menuItemCount());
         if (menuItem.getStock() == 0) {
             menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
         }
@@ -128,16 +130,20 @@ public class OrderService {
         existingOrder.setMenuItem(menuItem);
         existingOrder.setMenuItemCount(updatedOrderRequest.menuItemCount());
         existingOrder.setNote(updatedOrderRequest.note());
+        existingOrder.setStatus(OrderStatus.getEnumByString(updatedOrderRequest.status()));
         existingOrder.setTotalPrice(updatedOrderRequest.menuItemCount() * menuItem.getPrice());
 
-        User updateUser = userRepository.findByContactTel(updatedOrderRequest.contactTel())
-                .orElseGet(() -> {
-                    User newUser = new User();
-                    newUser.setCustomerName(updatedOrderRequest.customerName());
-                    newUser.setContactTel(updatedOrderRequest.contactTel());
-                    return userRepository.save(newUser);
-                });
-        existingOrder.setUser(updateUser);
+        /*
+         * User updateUser =
+         * userRepository.findByContactTel(updatedOrderRequest.contactTel())
+         * .orElseGet(() -> {
+         * User newUser = new User();
+         * newUser.setCustomerName(updatedOrderRequest.customerName());
+         * newUser.setContactTel(updatedOrderRequest.contactTel());
+         * return userRepository.save(newUser);
+         * });
+         * existingOrder.setUser(updateUser);
+         */
         Order updatedOrder = orderRepository.save(existingOrder);
         response.setErrorCode(200);
         response.setData(convertToOrderResponse(updatedOrder));

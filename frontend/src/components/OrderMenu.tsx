@@ -3,6 +3,8 @@ import { categoies, searchCategories } from "../Category";
 import AddOrder from './PopupOrder';
 import { useAuth } from '../context/AuthContext';
 import { MenuItem } from '../Menu';
+import MessageBox from './MessageBox';
+import { useNavigate } from 'react-router-dom';
 
 const OrderMenu = () => {
     const { user, isLoggedIn, logout } = useAuth();
@@ -10,6 +12,10 @@ const OrderMenu = () => {
     const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
     const [category, setCategory] = useState<string>("All");
     const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
+    const [isShowMessageBoxModalOpen, setIsShowMessageBoxModalOpen] = useState(false);
+    const [title, setTitle] = useState('');
+    const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     const refreshData = async () => {
         try {
@@ -49,10 +55,21 @@ const OrderMenu = () => {
     // Open modal for viewing a policy
     const openAddOrderModal = (selectedItem: MenuItem | null) => {
         console.log("selected Item " + selectedItem);
+        if (!isLoggedIn) {
+            setTitle("Message");
+            setMessage("Please sign in first before you order!")
+            setIsShowMessageBoxModalOpen(true);
+            return;
+
+        }
         setSelectedItem(selectedItem);
         setIsAddOrderModalOpen(true);
     };
 
+    const handleClose = () => {
+        setIsShowMessageBoxModalOpen(false);
+        navigate('/login');
+    }
 
     // Close modal
     const closeAddOrderModal = () => {
@@ -100,6 +117,10 @@ const OrderMenu = () => {
 
             {isAddOrderModalOpen && selectedItem && (
                 <AddOrder selectedItem={selectedItem} selectedOrder={null} closeOrder={closeAddOrderModal}></AddOrder>
+            )}
+
+            {isShowMessageBoxModalOpen && (
+                <MessageBox onClose={handleClose} title={title} message={message} />
             )}
         </div>
     );

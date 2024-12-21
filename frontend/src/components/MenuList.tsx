@@ -111,8 +111,8 @@ const MenuList = () => {
                         <li key={item.id} className="border p-4 rounded shadow-lg">
                             <h3 className="text-lg font-bold">{item.name}</h3>
                             <p>Category: {item.category}</p>
-                            <p>Price: ${item.price.toFixed(2)}</p>
-                            <p>Stock: ${item.stock.toFixed(2)}</p>
+                            <p>Price: ${item.price}</p>
+                            <p>Stock: {item.stock}</p>
                             <p>Description: {item.description}</p>
                             <p>
                                 <button
@@ -123,7 +123,7 @@ const MenuList = () => {
                                 </button> &nbsp;
                                 <button
                                     onClick={() => handleDeleteMenu(item)}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
+                                    className="bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-600"
                                 >
                                     Delete
                                 </button>

@@ -128,7 +128,7 @@ const UserList = () => {
                             </button> &nbsp;
                             <button
                                 onClick={() => handleDeleteUser(user)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
+                                className="bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-600"
                             >
                                 Delete
                             </button>
