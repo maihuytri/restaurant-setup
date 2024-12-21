@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,15 @@ public class ReservationController {
             @PathVariable Long bookingTableId, @PathVariable Long userId) {
         ReservationResponse reservationResponse = reservationService.createReservation(reservationRequest,
                 bookingTableId, userId);
+        return reservationResponse;
+    }
+
+    @PutMapping("/{reservationId}")
+    public ReservationResponse editReservation(@RequestBody ReservationRequest request,
+            @PathVariable Long reservationId) {
+        ReservationResponse reservationResponse = reservationService.editReservation(request,
+                reservationId);
+        System.out.println(reservationResponse);
         return reservationResponse;
     }
 
