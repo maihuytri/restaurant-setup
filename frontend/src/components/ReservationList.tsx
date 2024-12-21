@@ -34,6 +34,7 @@ const ReservationList = () => {
 
   const { user } = useAuth();
 
+
   const cancelModal = (): void => {
     setShowEditModal(false);
   };

@@ -128,7 +128,7 @@ public class OrderService {
             return response;
         }
 
-        menuItem.setStock(menuItem.getStock() - updatedOrderRequest.menuItemCount());
+        menuItem.setStock(menuItem.getStock() + existingOrder.getMenuItemCount() - updatedOrderRequest.menuItemCount());
         if (menuItem.getStock() == 0) {
             menuItem.setStatus(MenuItemStatus.UNAVAILABLE.name());
         }

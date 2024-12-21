@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { MenuItem } from '../Menu';
 import AddOrder from './PopupOrder';
 import ConfirmMessageBox from './ConfirmMessageBox';
+import { roles } from '../Role';
 
 interface Order {
     id: number;
@@ -137,18 +138,28 @@ const OrderList = () => {
                             <strong>Status:</strong> {order.status}
                         </p>
                         <p>
-                            <button
-                                onClick={() => openAddOrderModal(order)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
-                            >
-                                Edit
-                            </button> &nbsp;
-                            <button
-                                onClick={() => handleDeleteMenu(order)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
-                            >
-                                Delete
-                            </button>
+                            {(user != null && user?.role == 'customer' && order.status == 'PENDING') && (
+                                <button
+                                    onClick={() => openAddOrderModal(order)}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
+                                >
+                                    Edit
+                                </button>)}
+                            {(user != null && user?.role == 'manager' && (order.status == 'PENDING' || order.status == 'IN_PROGRESS')) && (
+                                <button
+                                    onClick={() => openAddOrderModal(order)}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
+                                >
+                                    Edit
+                                </button>)} &nbsp;
+                            {(user != null && user?.role == 'customer' && order.status == 'PENDING') && (
+                                <button
+                                    onClick={() => handleDeleteMenu(order)}
+                                    className="bg-red-500 text-white px-4 py-2 rounded mr-2 hover:bg-red-600"
+                                >
+                                    Cancel
+                                </button>
+                            )}
                         </p>
                     </li>
                 ))}

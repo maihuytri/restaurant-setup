@@ -9,6 +9,7 @@ interface MenuItem {
     description: string;
     price: number;
     category: string;
+    stock: number;
 }
 
 const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, closeMenu: () => void }) => {
@@ -17,7 +18,7 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('0');
-    const [stock, setStock] = useState('1');
+    const [stock, setStock] = useState(1);
     const [category, setCategory] = useState('');
     const [isShowMessageBoxModalOpen, setIsShowMessageBoxModalOpen] = useState(false);
     const [title, setTitle] = useState('');
@@ -39,6 +40,7 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
                 setDescription(selectedMenu.description);
                 setPrice(selectedMenu.price.toString());
                 setCategory(selectedMenu.category);
+                setStock(selectedMenu.stock);
             }
         }
 
@@ -167,7 +169,7 @@ const AddMenu = ({ selectedMenu, closeMenu }: { selectedMenu: MenuItem | null, c
                                     type="number"
                                     placeholder="Please enter your stock"
                                     value={stock}
-                                    onChange={(e) => setStock(e.target.value)}
+                                    onChange={(e) => setStock(Number(e.target.value))}
                                     required
                                     className="block w-full border p-2 rounded"
                                 />

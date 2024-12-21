@@ -28,13 +28,15 @@ public class MenuItemService {
     // getMenuItemByCategory
     public List<MenuItemResponse> getMenuItemsByCategory(String category) {
         List<MenuItem> menuItems = menuItemRepository.findByCategory(category);
-        return menuItems.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+        return menuItems.stream().filter(m -> m.getStatus().equals(MenuItemStatus.AVAILABLE.name()))
+                .map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
     // getAllMenuItems
     public List<MenuItemResponse> getAllMenuItems() {
         List<MenuItem> all = menuItemRepository.findAll();
-        return all.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+        return all.stream().filter(m -> m.getStatus().equals(MenuItemStatus.AVAILABLE.name()))
+                .map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
     public MenuItemResponse createMenuItem(MenuItemRequest menuItemRequest) {
