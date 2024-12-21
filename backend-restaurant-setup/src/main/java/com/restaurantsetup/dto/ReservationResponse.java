@@ -1,14 +1,15 @@
 package com.restaurantsetup.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record ReservationResponse(
-        Long reservationId,
-        String note,
-        String title,
-        LocalDate date,
-        String time,
-        BookingTableResponse bookingTableResponse,
-        UserResponse userResponse) {
+                Long reservationId,
+                String note,
+                String title,
+                LocalDateTime date,
+                String time,
+                String status,
+                BookingTableResponse bookingTableResponse,
+                UserResponse userResponse) {
 
 }

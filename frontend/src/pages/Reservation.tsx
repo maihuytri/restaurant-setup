@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ReservationSkeleton from "../skeletons/ReservationSkeleton";
 import { extractUserIdFromToken } from "../utils";
@@ -49,7 +49,8 @@ const Reservation = () => {
     fetchTables();
   }, [user?.token]);
 
-  const handleReserve = () => {
+  const handleReserve = (e: FormEvent) => {
+    e.preventDefault();
     if (!selectedTable) {
       alert("Please select a table!");
       return;
@@ -137,7 +138,7 @@ const Reservation = () => {
                 </li>
               ))
           ) : (
-            <p className="font-medium text-gray-300 text-sm">
+            <p className="font-medium text-gray-500 text-sm">
               No Available Tables
             </p>
           )}
@@ -145,33 +146,38 @@ const Reservation = () => {
       </div>
       <div className="mt-6">
         <h2 className="text-xl font-bold mb-4">Reservation Details</h2>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="block w-full mb-2 border p-2 rounded"
-        />
-        <input
-          type="text"
-          placeholder="Note"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          className="block w-full mb-2 border p-2 rounded"
-        />
-        <input
-          type="text"
-          placeholder="e.g.12:00"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          className="block w-full mb-2 border p-2 rounded"
-        />
-        <button
-          onClick={handleReserve}
-          className="bg-blue-500  text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Reserve Table
-        </button>
+        <form onSubmit={(e) => handleReserve(e)}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            className="block w-full mb-2 border p-2 rounded"
+          />
+          <input
+            type="text"
+            placeholder="Note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            className="block w-full mb-2 border p-2 rounded"
+          />
+          <input
+            type="text"
+            required
+            placeholder="e.g.12:00"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="block w-full mb-2 border p-2 rounded"
+          />
+          <button
+            type="submit"
+            onClick={(e) => handleReserve(e)}
+            className="bg-blue-500  text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Reserve Table
+          </button>
+        </form>
       </div>
     </div>
   );
